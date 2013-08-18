@@ -1,0 +1,109 @@
+html,body {
+	position:absolute;
+	font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Microsoft Yahei";
+	margin: 0 auto;
+	padding:0;
+	min-width: 100%;
+	height: 100%
+}
+
+#wrapper {
+	width: 100%;
+}
+
+#header {
+	background: #f1f1f1;
+	border-bottom: 1px solid #e5e5e5;
+	height: 72px;
+	overflow: hidden;
+}
+
+#header #logo {
+	float: left;
+	margin: 12px 0 0 48px;
+}
+
+#header #signup-button {
+	float: right;
+	margin: 22px 48px 0;
+}
+
+#content {
+	margin:0 auto;
+	padding-top: 48px;
+	width: 100%;
+	max-width: 1000px;
+	min-width: 780px;
+}
+
+#content #introduction {
+	float: left;
+}
+
+#content #signin-box {
+	background: #f1f1f1;
+	border: 1px solid #e5e5e5;
+	float: right;
+	margin: 16px 0;
+	padding: 24px;
+	width: 335px;
+}
+
+#content #signin-box label#remember {
+	display: inline-block;
+	vertical-align: top;
+	margin: 8px 0 0 24px;
+}
+
+#content #signin-box label#remember-label {
+	color: #666;
+	font-size: 12px;
+	font-weight: normal;
+	vertical-align: top;
+	margin-top: -3px;
+}
+
+#content input[type="text"], 
+#content input[type="password"] {
+	font-size: 15px;
+	height: 24px;
+	width: 100%;
+}
+
+#content #signin-box div {
+	margin: 0 0 1.5em;
+}
+
+#footer {
+	border-top: 1px solid #ebebeb;
+	font-size: 92%;
+	height: 36px;
+	overflow: hidden;
+	padding-top: 8px;
+	width: 100%;
+	position:absolute;
+	bottom:0;
+}
+
+#footer #copyright {
+	color: #666;
+	float: left;
+	margin-left: 48px;
+}
+
+#footer #help-and-support {
+	float: right;
+	margin-right: 48px;
+}
+
+#footer #help-and-support a {
+	color: #333;
+	text-decoration: none;
+}
+
+span.errormsg {
+	margin: .5em 0 0;
+	display: block;
+	color: #dd4b39;
+	line-height: 17px;
+}

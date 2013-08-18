@@ -1,0 +1,240 @@
+html, body {
+	position:absolute;
+	font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Microsoft Yahei";
+	margin: 0 auto;
+	padding:0px;
+	width: 100%;
+	min-height:100%;
+	overflow: auto;
+}
+
+#header {
+	background: #f1f1f1;
+	overflow: hidden;
+	min-width: 768px;
+}
+
+#header #nav-bar {
+	background-color: #2d2d2d;
+	border-bottom: 1px solid #666;
+	border-color: #e5e5e5;
+	color: #bbb;
+	font-size: 14px;
+	font-weight: bold;
+	height: 32px;
+	padding-left: 32px;
+}
+
+#header #nav-bar ul {
+	padding-top: 4px;
+}
+
+#header #nav-bar a {
+	color: #bbb;
+	padding-right: 16px;
+	text-decoration: none;
+}
+
+#header #user-bar {
+	background-color: #f5f5f5;
+	border-bottom: 1px solid #e5e5e5;
+	padding: 8px 32px 8px 32px;
+}
+
+#header #user {
+	float: right;
+	margin-top: 12px;
+}
+
+#user a {
+	color: #666;
+	text-decoration: none;
+}
+
+#header #gravatar-small {
+	background-color: #f8f8f8;
+	background-image: -webkit-linear-gradient(top,#f8f8f8,#ececec);
+	border: 1px solid #c6c6c6;
+	display: block;
+	margin-top: -8px;
+	height: 32px;
+	width: 32px;
+}
+
+#gravatar-small img {
+	height: 32px;
+	width: 32px;
+}
+
+#profile {
+	background-color: #f5f5f5;
+	box-shadow: 0 2px 4px rgba(0,0,0,.2);
+	border: 1px solid #bebebe;
+	display: none;
+	position: absolute;
+	right: 32px;
+	top: 96px;
+	text-align: left;
+	z-index: 16384;
+}
+
+#profile span#arrow {
+	display: inline-block;
+	border-bottom:solid 12px #fff;
+    border-left: solid 8px transparent;
+    border-right: solid 8px transparent;
+	position: absolute;
+	top: -10px;
+	right: 16px;
+	z-index: 16384;
+}
+
+#profile span#arrow-shadow {
+	display: inline-block;
+	border-bottom:solid 12px #bebebe;
+    border-left: solid 8px transparent;
+    border-right: solid 8px transparent;
+	position: absolute;
+	top: -12px;
+	right: 16px;
+	z-index: 16383;
+}
+
+#profile #brief-profile {
+	background: #fff;
+	border-bottom: 1px solid #bebebe;
+	box-shadow: 0 2px 4px rgba(0,0,0,.12);
+	padding: 16px;
+}
+
+#brief-profile #gravatar-large {
+	display: inline-block;
+}
+
+#brief-profile #profile-info {
+	display: inline-block;
+	padding-left: 16px;
+	padding-right: 48px;
+	vertical-align: top;
+}
+
+#profile-info #user-info {
+	padding-bottom: 24px;
+}
+
+#profile-info #user-info span {
+	display: block;
+}
+
+#profile-info #user-info #username {
+	color: #666;
+	font-size: 13px;
+}
+
+#profile #sign-out {
+	padding: 8px 16px 8px 16px;
+	text-align: right;
+}
+
+#scroll-down-button {
+	background-image: url('../img/arrow_down.png');
+	background-size: 7px 4px;
+	opacity: .8;
+	position: absolute;
+	top: 64px;
+	right:	24px;
+	height: 4px;
+	width: 7px;
+}
+
+#header #visitor-bar {
+	padding: 12px 48px 12px 48px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+#header #signin-button {
+	float: right;
+	margin-top: 12px;
+}
+
+#signin-button #remember {
+	font-size: 12px;
+	padding-top: 3 px;
+	padding-right: 4px;
+}
+
+#signin-button #persistent-cookie {
+	margin-top: 2px;
+}
+
+#content {
+	margin:0 auto;
+	padding-top: 24px;
+	padding-bottom: 108px;
+	width: auto;
+	max-width: 1024px;
+	min-width: 800px;
+	height:70%;
+}
+
+#content #maia-breadcrumb {
+	padding: 8px 4px;
+}
+
+#content #navigator {
+	float: left;
+	position: relative;
+	margin-left: 20px;
+	margin-right: 32px;
+	width: 256px;
+}
+
+#supporter {
+	list-style: none;
+	text-indent: -1em;
+}
+
+.sidenav .icon-chevron-right {
+	float: right;
+	margin-top: 12px;
+	margin-right: 8px;
+	opacity: .25;
+}
+
+.section-content {
+	padding-bottom: 32px;
+}
+
+h3.version-header {
+	background: #f1f1f1;
+	border-top: 2px solid #e5e5e5;
+	padding: 10px 50px 10px 0;
+}
+
+#footer {
+	background-color: #FFF;
+	border-top: 1px solid #ebebeb;
+	font-size: 92%;
+	height: 36px;
+	overflow: hidden;
+	padding-top: 8px;
+	width: 100%;
+	position:absolute;
+	bottom:0;
+}
+
+#footer #copyright {
+	color: #666;
+	float: left;
+	margin-left: 48px;
+}
+
+#footer #help-and-support {
+	float: right;
+	margin-right: 48px;
+}
+
+#footer #help-and-support a {
+	color: #333;
+	text-decoration: none;
+}
