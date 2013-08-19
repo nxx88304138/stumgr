@@ -193,21 +193,9 @@ class Admin extends CI_Controller {
         $config['upload_path']      = './application/cache/';
         $config['allowed_types']    = 'xls|xlsx';
         $config['max_size']         = '1024';
-        $config['encrypt_name']     = true;
         $this->load->library('lib_upload', $config);
 
-        if ( !$this->lib_upload->do_upload('fileUploader') ) {
-            return array( 
-                    'is_successful' => false,
-                    'extra_message' => $this->lib_upload->display_errors()
-                );
-        } else {
-            return array( 
-                    'is_successful' => true,
-                    'extra_message' => $this->lib_upload->data()
-                );
-        }
-        var_dump($_FILES['fileUploaderfile']);
+        return $this->lib_upload->do_upload();
     }
 
     /**

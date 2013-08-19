@@ -6,8 +6,7 @@
  */
 class Lib_evaluation {
     /**
-     * A instance of CodeIgniter.
-     * @var $CI is an object
+     * @var A instance of CodeIgniter.
      */
     private $__CI;
     
