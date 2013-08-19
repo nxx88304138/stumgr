@@ -130,7 +130,7 @@ class Users_model extends CI_Model {
 			$time = new DateTime('now', new DateTimeZone('Asia/Shanghai'));
 			$new_account_record = array(
 					'username'					=> $username,
-					'password'					=> md5($new_password),
+					'password'					=> $new_password,
 					'last_time_change_password'	=> $time->format('Y-m-d H:i:s')
 				);
 			return $this->update($new_account_record);

@@ -194,21 +194,20 @@ class Admin extends CI_Controller {
         $config['allowed_types']    = 'xls|xlsx';
         $config['max_size']         = '1024';
         $config['encrypt_name']     = true;
-        $config['remove_spaces']    = true;
-        $this->load->library('upload', $config);
+        $this->load->library('lib_upload', $config);
 
-        if ( !$this->upload->do_upload() ) {
+        if ( !$this->lib_upload->do_upload('fileUploader') ) {
             return array( 
                     'is_successful' => false,
-                    'extra_message' => $this->upload->display_errors()
+                    'extra_message' => $this->lib_upload->display_errors()
                 );
         } else {
-            $file_info = $this->upload->data();
             return array( 
                     'is_successful' => true,
-                    'extra_message' => $file_info['full_path']
+                    'extra_message' => $this->lib_upload->data()
                 );
         }
+        var_dump($_FILES['fileUploaderfile']);
     }
 
     /**
@@ -231,7 +230,7 @@ class Admin extends CI_Controller {
             $result['is_successful']        = $result['is_query_successful'];
         }
 
-        $this->load->view('admin/import.php');
+        echo json_encode($result);
     }
 
     public function get_data_for_editusers() 

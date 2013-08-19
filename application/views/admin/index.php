@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/bootstrap-responsive.min.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/messenger.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/messenger-theme-future.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/fineuploader.min.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/admin-page.css">
 	<!-- Java Script -->
 	<script src="<?php echo base_url(); ?>public/js/jquery-1.10.1.min.js"></script>
