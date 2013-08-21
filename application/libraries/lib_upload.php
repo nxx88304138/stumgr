@@ -33,16 +33,15 @@ class Lib_upload {
                 'extra_message' => ''
             );
 
-
         if (!isset($_FILES["fileUploaderfile"])) {
             $result['is_successful']  = false;
-            $result['extra_message'] += '请选择需要上传的文件.<br />';
+            $result['extra_message'] = '请选择需要上传的文件.';
         } else if ( !$this->is_file_type_allowed($_FILES["fileUploaderfile"]['name']) ) {
             $result['is_successful']  = false;
-            $result['extra_message'] += '文件类型不匹配.<br />';
+            $result['extra_message'] = '文件类型不匹配.';
         } else if ( !$this->is_file_size_allowed($_FILES["fileUploaderfile"]['size']) ) {
             $result['is_successful']  = false;
-            $result['extra_message'] += '超过最大允许的文件大小.<br />';   
+            $result['extra_message'] = '超过最大允许的文件大小.';   
         }
 
         if ( $result['is_successful'] ) {

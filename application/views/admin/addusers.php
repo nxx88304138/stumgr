@@ -162,10 +162,16 @@
                 uploadButton: '上传文件'
             }
         }).on('complete', function(event, id, file_name, result) {
-            if ( result['is_upload_successful'] ) {
-                
+            if ( result['is_successful'] ) {
+                $('.fileUploader-upload-fail').last().addClass('fileUploader-upload-success');
+                $('.fileUploader-upload-fail').last().removeClass('fileUploader-upload-fail');
+                $('.fileUploader-upload-status-text').last().html('已成功导入所有学生信息. <a href="#logs"><small>查看详情</small></a>');
             } else {
-                
+                if ( !result['is_upload_successful'] ) {
+                    $('.fileUploader-upload-status-text').last().html(result['error_message']);
+                } else {
+                    $('.fileUploader-upload-status-text').last().html('部分学生的信息未能成功导入. <a href="#logs"><small>查看详情</small></a>');
+                }
             }
         });
     });

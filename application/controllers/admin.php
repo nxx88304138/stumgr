@@ -199,6 +199,15 @@ class Admin extends CI_Controller {
     }
 
     /**
+     * Get data for logs.php page.
+     *
+     * IMPORTANT: No data is needed by the page. However, each page
+     *            will invoke a function when the page is loaded.
+     *            So, you CANNOT remove this function.
+     */
+    public function get_data_for_logs() { }
+
+    /**
      * Add users from an excel file.
      */
     public function add_users() 
@@ -210,15 +219,45 @@ class Admin extends CI_Controller {
             );
 
         $upload_result = $this->upload_files();
-        $result['is_upload_successful'] = $upload_result['is_successful'];
+        $result['is_upload_successful']     = $upload_result['is_successful'];
         if ( !$result['is_upload_successful'] ) {
             $result['error_message']        = $upload_result['extra_message'];
         } else {
             $result['is_query_successful']  = $this->lib_accounts->add_users($upload_result['extra_message'], $result);
             $result['is_successful']        = $result['is_query_successful'];
+            $this->log_messages($result['error_message'], $result['success_message']);
         }
 
         echo json_encode($result);
+    }
+
+    /**
+     * Log error messages and success messages to local temporary file.
+     * @param  String $error_message   - a string contains error message
+     * @param  String $success_message - a string contains success message
+     */
+    private function log_messages(&$error_message, &$success_message)
+    {
+        if ( !empty($error_message) ) {
+            $error_log_file_path = APPPATH.'cache/error.log';
+            $this->log_to_file($error_log_file_path, $error_message);
+        }
+        if ( !empty($success_message) ) {
+            $success_log_file_path = APPPATH.'cache/success.log';
+            $this->log_to_file($success_log_file_path, $success_message);   
+        }
+    }
+
+    /**
+     * Log error messages and success messages to local temporary file.
+     * @param  String $target_name - target file path on the server
+     * @param  String $content - message to log to file
+     */
+    private function log_to_file($target_name, &$content)
+    {
+        $file = fopen($target_name,"w");
+        fwrite($file, $content);
+        fclose($file);
     }
 
     public function get_data_for_editusers() 
