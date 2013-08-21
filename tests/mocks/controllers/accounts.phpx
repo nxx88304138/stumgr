@@ -1,5 +1,0 @@
-<?php
-
-class Mock_Controllers_Accounts extends CI_Controller {
-
-}

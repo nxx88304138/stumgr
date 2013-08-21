@@ -10,10 +10,10 @@
 	stopOnIncomplete="false"
 	stopOnSkipped="false">
 	<testsuites>
-		<testsuite name="CodeIgniter Core Test Suite">
-			<directory suffix="test.php">./stumgr/core</directory>
-			<directory suffix="test.php">./stumgr/controllers</directory>
-			<directory suffix="test.php">./stumgr/libraries</directory>
+		<testsuite name="Student Management System Core Test Suite">
+			<directory suffix="test.php">./application/core</directory>
+			<directory suffix="test.php">./application/controllers</directory>
+			<directory suffix="test.php">./application/libraries</directory>
 		</testsuite>
 	</testsuites>
 	<filter>

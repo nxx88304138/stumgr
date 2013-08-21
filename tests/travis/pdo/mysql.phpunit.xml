@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit 
-	bootstrap="../../Bootstrap.php"
+	bootstrap="../../bootstrap.php"
 	colors="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
@@ -13,8 +13,8 @@
         <const name="DB_DRIVER" value="pdo/mysql"/>
     </php>
 	<testsuites>
-		<testsuite name="CodeIgniter Core Test Suite">
-			<directory suffix="test.php">../../codeigniter</directory>
+		<testsuite name="Student Management System Core Test Suite">
+			<directory suffix="test.php">../../Student Management System</directory>
 		</testsuite>
 	</testsuites>
 	<filter>

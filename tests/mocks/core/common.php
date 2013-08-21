@@ -73,6 +73,7 @@ if ( ! function_exists('load_class'))
 		{
 			throw new Exception('Not Implemented: Non-core load_class()');
 		}
+
 		$test = CI_TestCase::instance();
 
 		$obj =& $test->ci_core_class($class);
