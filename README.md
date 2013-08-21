@@ -11,7 +11,7 @@ Version: 2.0.0 (Under Development)
 ---
 Student Management System is designed for School of Software in Hefei University of Technology.
 
-The system is based on [CodeIgniter Framework](http://codeigniter.com). It is mainly used for students to query their scores, ranks and to do peer assessment at the end of school year.
+The system is based on [CodeIgniter Framework](http://codeigniter.com). It is mainly used for students to query their scores, ranks and to do peer assessment at the end of the school year.
 
 ### License ###
 This project is open sourced under GNU GPL v3.
