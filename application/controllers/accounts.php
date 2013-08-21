@@ -58,8 +58,16 @@ class Accounts extends CI_Controller {
 		$allow_auto_sign_in = $this->input->post('persistent-cookie');
 	
 		$result = $this->lib_accounts->sign_in($username, $password);
+        $this->redirect($result);
+	}
 
-		if ( $result['is_passed'] ) {
+    /**
+     * Handle redirect requests. If the user sign in successfully,
+     * it will redirect you to the main controller.
+     */
+    private function redirect(&$result)
+    {
+        if ( $result['is_passed'] ) {
 			$is_administrator = $result['is_administrator'];
 			$last_time_signin = $result['last_time_signin'];
 			$this->lib_accounts->set_user_session($is_administrator, $username, 
@@ -68,8 +76,8 @@ class Accounts extends CI_Controller {
 		} else {
 			$result['username'] = $username;
 			$this->load->view('accounts/signin.php', $result);
-		}
-	}
+		}    
+    }
 	
 	/**
 	 * Handle user's sign out request.

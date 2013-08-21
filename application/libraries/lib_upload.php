@@ -49,7 +49,6 @@ class Lib_upload {
             $result = $this->upload_file($_FILES["fileUploaderfile"]['name'], 
                                          $_FILES["fileUploaderfile"]['tmp_name']);
         }
-        var_dump($result);
         return $result;
     }
 
@@ -95,10 +94,9 @@ class Lib_upload {
                 'extra_message' => ''
             );
 
+        $source_path = $_FILES["fileUploaderfile"]['tmp_name'];
         $target_path = $this->get_target_file_path($file_name, $tmp_name);
-        move_uploaded_file($tmp_name, $target_path);
-        $result['is_successful'] = $this->handle_upload_request($target_path);
-        if ( $result['is_successful'] ) {
+        if ( $result['is_successful'] = move_uploaded_file($tmp_name, $target_path) ) {
             $result['extra_message'] = $target_path;
         } else {
             $result['extra_message'] = '发生未知错误.<br />';
@@ -120,38 +118,7 @@ class Lib_upload {
         $random_file_name = md5(uniqid(mt_rand())).'.'.$ext;
 
         return $this->config['upload_path'].$random_file_name;
-    }
-
-    private function handle_upload_request($path)
-    {
-        $input = fopen("php://input", "r");
-        $temp = tmpfile();
-        $real_size = stream_copy_to_stream($input, $temp);
-        fclose($input);
-
-        if ($real_size != $this->get_size()){            
-            return false;
-        }
-        
-        $target = fopen($path, "w");        
-        fseek($temp, 0, SEEK_SET);
-        stream_copy_to_stream($temp, $target);
-        fclose($target);
-
-        return true;
-    }
-
-    /**
-     * Get the file size
-     * @return an integer file size in byte
-     */
-    private function get_size() {
-        if (isset($_SERVER["CONTENT_LENGTH"])){
-            return (int)$_SERVER["CONTENT_LENGTH"];            
-        } else {
-            throw new Exception('Getting content length is not supported.');
-        }      
-    }   
+    }  
 }
 
 /* End of file lib_upload.php */

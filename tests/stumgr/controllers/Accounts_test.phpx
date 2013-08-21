@@ -1,0 +1,18 @@
+<?php
+
+class Accounts_test extends CI_TestCase {
+
+	public function set_up()
+	{
+        $this->Accounts = new Mock_Controllers_Accounts();
+    }
+
+	// --------------------------------------------------------------------
+
+    public function test_signin_empty()
+    {
+        $result = $this->Accounts->signin();
+        $this->assertFalse($result['is_passed']);
+    }
+
+}

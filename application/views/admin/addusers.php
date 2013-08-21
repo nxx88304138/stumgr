@@ -162,10 +162,10 @@
                 uploadButton: '上传文件'
             }
         }).on('complete', function(event, id, file_name, result) {
-            if ( result['is_successful'] ) {
-                alert("Success");
+            if ( result['is_upload_successful'] ) {
+                
             } else {
-                alert("Fail");
+                
             }
         });
     });
