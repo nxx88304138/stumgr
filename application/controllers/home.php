@@ -134,8 +134,7 @@ class Home extends CI_Controller {
      */
     public function get_data_for_profile()
     {
-        $account = $this->lib_accounts->get_last_time_change_password($this->profile['student_id']);
-        $data = array( 'account' => $account, 'profile' => $this->profile );
+        $data = array( 'profile' => $this->profile );
         return $data;
     }
 

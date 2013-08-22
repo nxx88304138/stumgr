@@ -17,6 +17,7 @@ class Lib_accounts {
     {
         $this->__CI =& get_instance();
         $this->__CI->load->model('Users_model');
+        $this->__CI->load->model('User_groups_model');
         $this->__CI->load->model('Sessions_model');
         $this->__CI->load->model('Students_model');
     }
@@ -133,17 +134,6 @@ class Lib_accounts {
     }
 
     /**
-     * Get the profile for a certain student.
-     * @param  String $student_id - the id of the student
-     * @return the information of the student if the query is successful, 
-     *         or return false if the query is failed
-     */
-    public function get_profile($student_id)
-    {
-        return $this->__CI->Students_model->select($student_id);
-    }
-
-    /**
      * Return the time when the user change password last time.
      * @param  String $username - the username of the user
      * @return an array which contains the time when the user change 
@@ -154,6 +144,69 @@ class Lib_accounts {
         $account_info = $this->__CI->Users_model->select($username);
         $return_value = array( 'last_time_change_password' => $account_info['last_time_change_password'] );
         return $return_value;
+    }
+
+    /**
+     * Get the profile for a certain student.
+     * @param  String $student_id - the id of the student
+     * @return the information of the student if the query is successful, 
+     *         or return false if the query is failed
+     */
+    public function get_profile($student_id)
+    {
+        $profile = $this->__CI->Students_model->select($student_id);
+        $account = $this->__CI->Users_model->select($student_id);
+
+        return array(
+                'student_id'                => $profile['student_id'],
+                'student_name'              => $profile['student_name'],
+                'grade'                     => $profile['grade'],
+                'class'                     => $profile['class'],
+                'room'                      => $profile['room'],
+                'mobile'                    => $profile['mobile'],
+                'email'                     => $profile['email'],
+                'user_group'                => $this->get_user_groups_name($profile['user_groups_id']),
+                'last_time_signin'          => $account['last_time_signin'],
+                'last_time_change_password' => $account['last_time_change_password']
+            );
+    }
+
+    /**
+     * Get available grades to select from existing data.
+     * @return an array contains all available grades
+     */
+    public function get_available_grades()
+    {
+        return $this->__CI->Students_model->get_available_grades();
+    }
+
+    public function get_user_groups_list()
+    {
+        return $this->__CI->User_groups_model->get_user_groups_list();
+    }
+
+    /**
+     * Get students' profile in a certain grade.
+     * @return an array of students' profile list
+     */
+    public function get_students_profile_list($grade)
+    {
+        $students = $this->__CI->Students_model->get_students_list_by_grade($grade);
+        foreach ( $students as &$student ) {
+            $student['user_group'] = $this->get_user_groups_name($student['user_groups_id']);
+        }
+
+        return $students;
+    }
+
+    /**
+     * Get the name of a certain group.
+     * @param  int $group_id - the id of the user group
+     * @return the name of the user group
+     */
+    private function get_user_groups_name($user_groups_id)
+    {
+        return $this->__CI->User_groups_model->get_group_name($user_groups_id);
     }
 
     /**
@@ -254,7 +307,8 @@ class Lib_accounts {
     }
 
     /**
-     * Get information of the user from a row array.
+     * Get information of the user which read from an excel file to 
+     * a row array.
      * @param  Array $record - an array contains user's information
      * @return an array which contains the information of the user
      */

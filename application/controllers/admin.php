@@ -112,7 +112,7 @@ class Admin extends CI_Controller {
 
     /**
      * Get data for the welcome.php page.
-     * @return an array which contains data which the page needs.
+     * @return an array which 'contains data which the page needs
      */
     public function get_data_for_welcome()
     {
@@ -129,7 +129,7 @@ class Admin extends CI_Controller {
 
     /**
      * Get data for the profile.php page.
-     * @return an array which contains data which the page needs.
+     * @return an array which 'contains data which the page needs
      */
     public function get_data_for_profile()
     {
@@ -260,9 +260,53 @@ class Admin extends CI_Controller {
         fclose($file);
     }
 
+    /**
+     * Get data for editusers.php page.
+     * @return an array which contains data which the page needs
+     */
     public function get_data_for_editusers() 
-    { 
+    {
+        $available_grades = $this->lib_accounts->get_available_grades();
+        $user_groups = $this->lib_accounts->get_user_groups_list();
+        $data = array( 'available_grades' => $available_grades, 'user_groups' => $user_groups );
+        return $data;
+    }
 
+    /**
+     * Get students' profile list in a certain grade.
+     * @param  int $grade [description]
+     * @return an array which contains students' profile list if the 
+     *         query success
+     */
+    public function get_students_profile_list($grade)
+    {
+        $available_grades = $this->lib_accounts->get_available_grades();
+        $students = array();
+        if ( $this->in_array($available_grades, 'grade', $grade) ) {
+            $students = $this->lib_accounts->get_students_profile_list($grade);
+        }
+        $result = array(
+                'is_successful' => ( count($students) != 0 ),
+                'students'      => $students
+            );
+        echo json_encode($result);
+    }
+
+    /**
+     * Verify if a value exists in multidimensional array.
+     * @param  Array  $array - the array to find
+     * @param  String $key   - the key to find
+     * @param  mixed  $val   - the value to find
+     * @return true if the value exists
+     */
+    private function in_array($array, $key, $val)
+    {
+        foreach ( $array as $item ) {
+            if ( isset($item[$key]) && $item[$key] == $val ) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

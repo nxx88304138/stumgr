@@ -45,9 +45,23 @@ class User_groups_model extends CI_Model {
 	{
 		$query = $this->select($group_id);
 		if ( $query ) {
-			return $query['group_name'];
+			return $query['display_name'];
 		}
 		return $query;
+	}
+
+	/**
+	 * Get the list of user groups.
+	 * @return an array of the list of user groups
+	 */
+	public function get_user_groups_list()
+	{
+		$query = $this->db->get( $this->db->dbprefix('user_groups') );
+		if ( $query->num_rows() > 0 ) {
+			return $query->result_array();
+		} else {
+			return false;
+		}
 	}
 }
 

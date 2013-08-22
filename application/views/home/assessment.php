@@ -8,7 +8,7 @@
 		} else if ( $extra['is_participated'] ) {
 			echo '<div class="alert alert-success"><strong>温馨提示: </strong>您已成功完成评价</div>';
 		} else {
-			require_once APPPATH.'views/home/peer-assessment.php';
+			require_once(APPPATH.'views/home/assessment-content.php');
 		}
 	?>
 </div> <!-- /peer-assessment-content -->

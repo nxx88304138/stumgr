@@ -28,10 +28,10 @@
 		<table class="table no-border" style="width: 84%;">
 			<tr class="no-border"><td>
 				<?php
-					if ( $account['last_time_change_password'] == '0000-00-00 00:00:00' ) {
+					if ( $profile['last_time_change_password'] == '0000-00-00 00:00:00' ) {
 						echo '您尚未修改过密码, 我们强烈建议您修改密码.';	
 					} else {
-						$time = strtotime($account['last_time_change_password']);
+						$time = strtotime($profile['last_time_change_password']);
 						echo '上次修改时间: <strong>'.date('Y年m月d日 H:i',$time).'</strong>';
 					}
 				?>
@@ -50,11 +50,11 @@
   		<div id="profile-error-message" class="alert alert-error hide"></div>
     	<table class="table no-border">
     		<tr class="no-border">
-    			<td class="text">移动电话</td>
+    			<td class="text-bold">移动电话</td>
     			<td><input type="text" name="mobile" maxlength="11" value="<?php echo $profile['mobile']; ?>" /></td>
     		</tr>
     		<tr class="no-border">
-    			<td class="text">电子邮件</td>
+    			<td class="text-bold">电子邮件</td>
     			<td><input type="text" name="email"　maxlength="36" value="<?php echo $profile['email']; ?>" /></td>
     		</tr>
     	</table>
@@ -75,15 +75,15 @@
   		<div id="password-error-message" class="alert alert-error hide"></div>
     	<table class="table no-border">
     		<tr class="no-border">
-    			<td class="text">旧密码</td>
+    			<td class="text-bold">旧密码</td>
     			<td><input type="password" name="old-password" maxlength="16" /></td>
     		</tr>
     		<tr class="no-border">
-    			<td class="text">新密码</td>
+    			<td class="text-bold">新密码</td>
     			<td><input type="password" name="new-password" maxlength="16" /></td>
     		</tr>
     		<tr class="no-border">
-    			<td class="text">确认新密码</td>
+    			<td class="text-bold">确认新密码</td>
     			<td><input type="password" name="password-again" maxlength="16" /></td>
     		</tr>
     	</table>

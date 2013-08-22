@@ -74,6 +74,22 @@ class Students_model extends CI_Model {
 	}
 
 	/**
+	 * Get available grades to choose in the table.
+	 * @return an array of available grades
+	 */
+	public function get_available_grades()
+	{
+		$this->db->distinct();
+		$this->db->select('grade');
+		$query = $this->db->get($this->db->dbprefix('students'));
+		if ( $query->num_rows() > 0 ) {
+			return $query->result_array();
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Get the students list in a certain class.
 	 * @param  int $grade - the grade of the students
 	 * @param  int $class - the class of the students
@@ -85,6 +101,22 @@ class Students_model extends CI_Model {
 
 		$this->db->where('grade', $grade);
 		$this->db->where('class', $class);
+		$query = $this->db->get($this->db->dbprefix('students'));
+		if ( $query->num_rows() > 0 ) {
+			return $query->result_array();
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Get the students list in a certain grade.
+	 * @param  int $grade - the grade of the students
+	 * @return an array of students list
+	 */
+	public function get_students_list_by_grade($grade)
+	{
+		$this->db->where('grade', $grade);
 		$query = $this->db->get($this->db->dbprefix('students'));
 		if ( $query->num_rows() > 0 ) {
 			return $query->result_array();

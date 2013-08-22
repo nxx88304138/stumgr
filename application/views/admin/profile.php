@@ -29,15 +29,15 @@
   		<div id="password-error-message" class="alert alert-error hide"></div>
     	<table class="table no-border">
     		<tr class="no-border">
-    			<td class="text">旧密码</td>
+    			<td class="text-bold">旧密码</td>
     			<td><input type="password" name="old-password" maxlength="16" /></td>
     		</tr>
     		<tr class="no-border">
-    			<td class="text">新密码</td>
+    			<td class="text-bold">新密码</td>
     			<td><input type="password" name="new-password" maxlength="16" /></td>
     		</tr>
     		<tr class="no-border">
-    			<td class="text">确认新密码</td>
+    			<td class="text-bold">确认新密码</td>
     			<td><input type="password" name="password-again" maxlength="16" /></td>
     		</tr>
     	</table>
