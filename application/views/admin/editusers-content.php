@@ -236,7 +236,7 @@
             success: function(result) {
                 if ( result['is_successful'] ) {
                     close_profile_dialog();
-                    load('editusers');
+                    refresh_datum_item(student_id, student_name, classx, room, mobile, email, user_group_name);
                 } else {
                     var error_message = '';
                     if ( result['is_student_name_empty'] ) {
@@ -279,7 +279,21 @@
         set_loading_mode(false);
 	}
 </script>
-
+<script type="text/javascript">
+    function refresh_datum_item(student_id, student_name, classx, room, mobile, email, user_group_name) {
+        $('.table-datum').each(function(index) {
+            if ( $(this).find('td').first().html() == student_id ) {
+                var datum_items = $(this).find('td');
+                datum_items.eq(1).html(student_name);
+                datum_items.eq(2).html(classx + '班');
+                datum_items.eq(3).html(room);
+                datum_items.eq(4).html(mobile);
+                datum_items.eq(5).html(email);
+                datum_items.eq(6).html($('select[name="user-group"] option[value="' + user_group_name + '"]').text());
+            }
+        });
+    }
+</script>
 <!-- Delete Accounts -->
 <script type="text/javascript">
     $('#delete-account').click(function(){
@@ -307,7 +321,8 @@
             dataType: 'JSON',
             success: function(result) {
                 if ( result['is_successful'] ) {
-                    load('editusers');
+                    close_profile_dialog();
+                    remove_datum_item(student_id);
                 } else {
                     set_error_message('#page-error', false);
                 }
@@ -317,6 +332,15 @@
             }
         });
         set_loading_mode(false);
+    }
+</script>
+<script type="text/javascript">
+    function remove_datum_item(student_id) {
+        $('.table-datum').each(function(index) {
+            if ( $(this).find('td').first().html() == student_id ) {
+                $(this).remove();
+            }
+        });
     }
 </script>
 <script type="text/javascript">
