@@ -37,17 +37,19 @@ class User_groups_model extends CI_Model {
 	}
 
 	/**
-	 * Get the name of a certain group.
-	 * @param  int $group_id - the id of the user group
-	 * @return the name of the user group
-	 */
-	public function get_group_name($group_id)
+     * Get the id of a certain user group by its name.
+     * @param  String $group_name - the name of the user group
+     * @return the id of the user group
+     */
+	public function get_user_group_id($group_name)
 	{
-		$query = $this->select($group_id);
-		if ( $query ) {
-			return $query['display_name'];
+		$this->db->where('group_name', $group_name);
+		$query = $this->db->get( $this->db->dbprefix('user_groups') );
+		if ( $query->num_rows() > 0 ) {
+			return $query->row_array();
+		} else {
+			return false;
 		}
-		return $query;
 	}
 
 	/**

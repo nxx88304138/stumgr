@@ -1,4 +1,4 @@
-<div class="alert alert-error hide"><strong>温馨提示: </strong>发生未知错误.</div>
+<div id="page-error" class="alert alert-error hide"><strong>温馨提示: </strong>发生未知错误.</div>
 <div id="selector">
 	<span>
 		<select id="available-grades" class="span2">
@@ -10,6 +10,9 @@
 			?>
 		</select>
 	</span>
+    <span>
+        <button class="btn btn-danger float-right" style="margin-bottom: 12px;">删除全部用户</button>
+    </span>
 </div> <!-- /selector -->
 <div id="list">
 	<table id="students-list" class="table table-striped">
@@ -27,6 +30,18 @@
 		<tbody></tbody>
 	</table>
 </div> <!-- /list -->
+
+<!-- Common -->
+<script type="text/javascript">
+    function set_error_message(element, is_visible) {
+        if ( is_visible ) {
+            $(element).css('display', 'block');
+        } else {
+            $(element).css('display', 'none');
+        }
+        set_footer_position();  // which is defined in index.php
+    }
+</script>
 
 <!-- Load Students List -->
 <script type="text/javascript">
@@ -49,26 +64,16 @@
                 			'<td>' + result['students'][i]['room'] + '</td>' + 
                 			'<td>' + result['students'][i]['mobile'] + '</td>' + 
                 			'<td>' + result['students'][i]['email'] + '</td>' + 
-                			'<td>' + result['students'][i]['user_group'] + '</td>' + 
+                			'<td>' + result['students'][i]['user_group']['display_name'] + '</td>' + 
                 			'</tr>'
                 		);
                 	}
-                	set_notice_message(true);
+                	set_error_message('#page-error', false);
                 } else {
-                	set_notice_message(false);
+                	set_error_message('#page-error', true);
                 }
             }
         });
-	}
-</script>
-<script type="text/javascript">
-	function set_notice_message(is_successful) {
-		if ( !is_successful ) {
-			$('.alert').css('display', 'block');
-		} else {
-			$('.alert').css('display', 'none');
-		}
-		set_footer_position();	// which is defined in index.php
 	}
 </script>
 <script type="text/javascript">
@@ -91,13 +96,13 @@
     	<h3 id="profile-dialog-title">编辑资料</h3>
   	</div>
   	<div class="modal-body">
-  		<div id="error-message" class="alert alert-error hide"></div>
+  		<div id="dialog-error" class="alert alert-error hide"></div>
     	<table class="table no-border">
     		<tr class="no-border">
     			<td class="text-bold">学号</td>
-    			<td class="text-normal"></td>
+    			<td class="text-normal"><label name="student_id"></label></td>
     			<td class="text-bold">姓名</td>
-    			<td><input type="text" name="student_name" maxlength="24"></td>
+    			<td><input type="text" class="span2" name="student_name" maxlength="24"></td>
     		</tr>
     		<tr class="no-border">
     			<td class="text-bold">年级</td>
@@ -116,28 +121,34 @@
     			</td>
     		</tr>
     		<tr class="no-border">
+                <td class="text-bold">用户组</td>
+                <td>
+                    <select name="user-group" class="span2">
+                        <?php
+                            foreach ( $user_groups as $group ) {
+                                echo '<option value="'.$group['group_name'].'">'.$group['display_name'].'</option>';
+                            }
+                        ?>
+                    </select>
+                </td>
     			<td class="text-bold">寝室</td>
-    			<td><input type="text" name="room" maxlength="7"></td>
-    			<td class="text-bold">用户组</td>
-    			<td>
-    				<select name="user-group">
-    					<?php
-    						foreach ( $user_groups as $group ) {
-    							echo '<option value="'.$group['group_name'].'">'.$group['display_name'].'</option>';
-    						}
-    					?>
-    				</select>
-    			</td>
+    			<td><input type="text" class="span2" name="room" maxlength="7"></td>
     		</tr>
+            <tr class="no-border">
+                <td class="text-bold">移动电话</td>
+                <td><input type="text" class="span2" name="mobile" maxlength="11"></td>
+                <td class="text-bold">电子邮件</td>
+                <td><input type="text" class="span2" name="email" maxlength="36"></td>
+            </tr>
     		<tr class="no-border">
     			<td class="text-bold">密码</td>
-    			<td><input type="password" name="password"　maxlength="16" /></td>
+    			<td><input type="password" class="span2" name="password"　maxlength="16" /></td>
     		</tr>
 
     	</table>
   	</div>
   	<div class="modal-footer">
-  		<button class="btn btn-danger float-left">删除</button>
+  		<button id="delete-user" class="btn btn-danger float-left">删除</button>
 		<button id="edit-profile" class="btn btn-primary">确认</button>
 		<button class="btn btn-cancel">取消</button>
  	</div>
@@ -146,18 +157,125 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 	    $('#students-list').delegate('tr.table-datum', 'click', function(){
-	        show_profile_dialog($(this).find('td').first().html());
+	        open_profile_dialog($(this).find('td').first().html());
 	    });
 	    $('.close').click(function(){
-			$('#profile-dialog').fadeOut();
+			close_profile_dialog();
 		});
 		$('.btn-cancel').click(function(){
-			$('#profile-dialog').fadeOut();
+			close_profile_dialog();
 		});
+        $('#edit-profile').click(function(){
+            var student_id = $('label[name="student_id"]').text();
+            set_loading_mode(true);
+            edit_user_profile(student_id);
+        });
 	});
 </script>
 <script type="text/javascript">
-	function show_profile_dialog(student_id) {
+	function open_profile_dialog(student_id) {
+		get_user_profile(student_id);
 		$('#profile-dialog').fadeIn();
+	}
+    function close_profile_dialog() {
+        $('#profile-dialog').fadeOut();
+    }
+</script>
+<script type="text/javascript">
+    function set_loading_mode(is_loading) {
+        if ( is_loading ) {
+            $('#profile-dialog :input').attr('disabled', true);
+        } else {
+            $('#profile-dialog :input').removeAttr('disabled');
+        }
+    }
+</script>
+<script type="text/javascript">
+	function get_user_profile(student_id) {
+		$.ajax({
+            type: 'POST',
+            async: true,
+            url: "<?php echo base_url().'admin/get_user_profile/'; ?>" + student_id,
+            dataType: 'JSON',
+            success: function(data) {
+                $('label[name="student_id"]').text(data['student_id']);
+                $('input[name="student_name"]').val(data['student_name']);
+                $('input[name="grade"]').val(data['grade']);
+                $('input[name="class"]').val(data['class']);
+                $('select[name="user-group"]').val(data['user_group']['group_name']);
+                $('input[name="room"]').val(data['room']);
+                $('input[name="mobile"]').val(data['mobile']);
+                $('input[name="email"]').val(data['email']);
+            },
+            error: function() {
+                $('#dialog-error').html('发生未知错误.');
+                set_error_message('#dialog-error', false);
+            }
+        });
+	}
+</script>
+<script type="text/javascript">
+	function edit_user_profile(student_id) {
+        var student_name        = $('input[name="student_name"]').val(),
+            grade               = $('input[name="grade"]').val(),
+            classx              = $('input[name="class"]').val(),
+            user_group_name     = $('select[name="user-group"]').val(),
+            room                = $('input[name="room"]').val(),
+            mobile              = $('input[name="mobile"]').val(),
+            email               = $('input[name="email"]').val(),
+            password            = $('input[name="password"]').val();
+        var post_data = 'student_name=' + student_name + '&grade=' + grade + '&class=' + classx +
+                        '&user_group_name=' + user_group_name + '&room=' + room + '&mobile=' + mobile + 
+                        '&email=' + email + '&password=' + password;
+		$.ajax({
+            type: 'POST',
+            async: true,
+            url: "<?php echo base_url().'admin/edit_user_profile/'; ?>" + student_id,
+            data: post_data,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['is_successful'] ) {
+                    close_profile_dialog();
+                    load('editusers');
+                } else {
+                    var error_message = '';
+                    if ( result['is_student_name_empty'] ) {
+                        error_message += '请填写学生姓名.<br />';
+                    } else if ( !result['is_student_name_legal'] ) {
+                        error_message += '请填写正确的学生姓名.<br />';
+                    }
+                    if ( result['is_grade_empty'] ) {
+                        error_message += '请填写学生所在年级.<br />';
+                    } else if ( !result['is_grade_legal'] ) {
+                        error_message += '请填写正确的年级.<br />';
+                    }
+                    if ( result['is_class_empty'] ) {
+                        error_message += '请填写学生所在班级.<br />';
+                    } else if ( !result['is_class_legal'] ) {
+                        error_message += '请填写正确的班级.<br />';
+                    }
+                    if ( result['is_room_empty'] ) {
+                        error_message += '请填写学生所在寝室.<br />';
+                    } else if ( !result['is_room_legal'] ) {
+                        error_message += '请填写正确的寝室.<br />';
+                    }
+                    if ( !result['is_mobile_legal'] ) {
+                        error_message += '请填写正确的手机号码.<br />';
+                    }
+                    if ( !result['is_email_legal'] ) {
+                        error_message += '请填写正确的电子邮件地址.<br />';
+                    }
+                    if ( !result['is_password_legal'] ) {
+                        error_message += '密码长度必须为6-16个字符.<br />';
+                    }
+                    if ( error_message == '' ) {
+                        error_message += '发生位置错误.<br />'
+                    }
+                    $('#dialog-error').html(error_message);
+                    set_error_message('#dialog-error', true);
+                }
+            }
+        });
+        set_loading_mode(false);
 	}
 </script>

@@ -1,7 +1,7 @@
 <h1 class="redtext">账户管理</h1>
 <div id="basic-information">
 	<div id="basic-information-header" class="page-header">
-		<span class="title">基本信息</span><span><a id="show-edit-profile-dialog" href="javascript:void(0)">编辑</a></span>
+		<span class="title">基本信息</span><span><a id="open-edit-profile-dialog" href="javascript:void(0)">编辑</a></span>
 	</div> <!-- /basic-information-header -->
 	<div id="basic-information-content" class="section">
 		<table class="table no-border" style="width: 84%;">
@@ -22,7 +22,7 @@
 </div> <!-- /basic-information -->
 <div id="password-information">
 	<div id="password-information-header" class="page-header">
-		<span class="title">密码</span><span><a id="show-change-password-dialog" href="javascript:void(0)">更改密码</a></span>
+		<span class="title">密码</span><span><a id="open-change-password-dialog" href="javascript:void(0)">更改密码</a></span>
 	</div> <!-- /password-information-header -->
 	<div id="password-information-content" class="section">
 		<table class="table no-border" style="width: 84%;">
@@ -96,13 +96,13 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#show-edit-profile-dialog').click(function(){
+		$('#open-edit-profile-dialog').click(function(){
 			if ( !$('#password-dialog').is(':visible') ) {
 				$('#profile-error-message').addClass('hide');
 				$('#profile-dialog').fadeIn();
 			}
 		});
-		$('#show-change-password-dialog').click(function(){
+		$('#open-change-password-dialog').click(function(){
 			if ( !$('#profile-dialog').is(':visible') ) {
 				$('#password-error-message').css('display', 'none');
 				$('#password-dialog').fadeIn();

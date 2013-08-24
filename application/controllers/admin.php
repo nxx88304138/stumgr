@@ -209,6 +209,7 @@ class Admin extends CI_Controller {
 
     /**
      * Add users from an excel file.
+     * @return an array which contains the query flags
      */
     public function add_users() 
     {
@@ -307,6 +308,59 @@ class Admin extends CI_Controller {
             }
         }
         return false;
+    }
+
+    /**
+     * Handle getting user's profile requests.
+     * @param  String $student_id - the student id of the student
+     * @return the profile of the student
+     */
+    public function get_user_profile($student_id)
+    {
+        $data = $this->lib_accounts->get_profile($student_id);
+        echo json_encode($data);
+    }
+
+    /**
+     * Handle edting user's profile requests.
+     * @param  String $student_id - the student id of the student
+     * @return an array which contains the query flags
+     */
+    public function edit_user_profile($student_id)
+    {
+        $profile = array(
+                'student_name'          => $this->input->post('student_name'),
+                'grade'                 => $this->input->post('grade'),
+                'class'                 => $this->input->post('class'),
+                'user_group_name'       => $this->input->post('user_group_name'),
+                'room'                  => $this->input->post('room'),
+                'mobile'                => $this->input->post('mobile'),
+                'email'                 => $this->input->post('email'),
+                'password'              => $this->input->post('password')
+            );
+        $result = $this->lib_accounts->edit_user_profile($student_id, $profile, $result);
+
+        echo json_encode($result);
+    }
+
+    /**
+     * [delete_user description]
+     * @param  [type] $student_id [description]
+     * @return an array which contains the query flags
+     */
+    public function delete_user($student_id)
+    {
+
+    }
+
+    /**
+     * [delete_users description]
+     * @param  [type] $grade [description]
+     * @return an array which contains the query flags
+     */
+    public function delete_users($grade)
+    {
+
     }
 }
 

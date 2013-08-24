@@ -157,7 +157,8 @@ class Lib_accounts {
         $profile = $this->__CI->Students_model->select($student_id);
         $account = $this->__CI->Users_model->select($student_id);
 
-        return array(
+        if ( $profile && $account ) {
+            return array(
                 'student_id'                => $profile['student_id'],
                 'student_name'              => $profile['student_name'],
                 'grade'                     => $profile['grade'],
@@ -165,10 +166,32 @@ class Lib_accounts {
                 'room'                      => $profile['room'],
                 'mobile'                    => $profile['mobile'],
                 'email'                     => $profile['email'],
-                'user_group'                => $this->get_user_groups_name($profile['user_groups_id']),
+                'user_group'                => $this->get_user_group_details($profile['user_groups_id']),
                 'last_time_signin'          => $account['last_time_signin'],
                 'last_time_change_password' => $account['last_time_change_password']
             );
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Get the list of user groups.
+     * @return an array of the list of user groups
+     */
+    public function get_user_groups_list()
+    {
+        return $this->__CI->User_groups_model->get_user_groups_list();
+    }
+
+    /**
+     * Get information of a certain user group.
+     * @param  int $user_groups_id - the id of the user group
+     * @return the information of the user group
+     */
+    public function get_user_group_details($user_groups_id)
+    {
+        return $this->__CI->User_groups_model->select($user_groups_id);
     }
 
     /**
@@ -180,11 +203,6 @@ class Lib_accounts {
         return $this->__CI->Students_model->get_available_grades();
     }
 
-    public function get_user_groups_list()
-    {
-        return $this->__CI->User_groups_model->get_user_groups_list();
-    }
-
     /**
      * Get students' profile in a certain grade.
      * @return an array of students' profile list
@@ -193,20 +211,10 @@ class Lib_accounts {
     {
         $students = $this->__CI->Students_model->get_students_list_by_grade($grade);
         foreach ( $students as &$student ) {
-            $student['user_group'] = $this->get_user_groups_name($student['user_groups_id']);
+            $student['user_group'] = $this->get_user_group_details($student['user_groups_id']);
         }
 
         return $students;
-    }
-
-    /**
-     * Get the name of a certain group.
-     * @param  int $group_id - the id of the user group
-     * @return the name of the user group
-     */
-    private function get_user_groups_name($user_groups_id)
-    {
-        return $this->__CI->User_groups_model->get_group_name($user_groups_id);
     }
 
     /**
@@ -340,7 +348,7 @@ class Lib_accounts {
                 'is_email_empty'    => true,   'is_email_legal'         => false
             );
 
-        $result['is_successful'] = $this->verify_profile_information($mobile, $email, $result);
+        $result['is_successful'] = $this->verify_contact_information($mobile, $email, $result);
         if ( $result['is_successful'] ) {
             $contact_information = array(
                     'student_id'    => $student_id,
@@ -361,17 +369,37 @@ class Lib_accounts {
      * @param  Array  $result - an array which contains the query flags 
      * @return an array which contains the query flags
      */
-    private function verify_profile_information($mobile, $email, &$result)
+    private function verify_contact_information($mobile, $email, &$result)
     {
         $result['is_mobile_empty'] = empty($mobile);
-        $result['is_mobile_legal'] = preg_match('/^[1-9][0-9]{10}$/', $mobile);
+        $result['is_mobile_legal'] = $this->is_mobile_legal($mobile);
         $result['is_email_empty']  = empty($email);
-        $result['is_email_legal']  = preg_match('/^[A-Z0-9._%-]{4,18}@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email);
+        $result['is_email_legal']  = $this->is_email_legal($email);
 
         $result['is_successful']   = (!$result['is_mobile_empty'] && !$result['is_email_empty'] &&
                                        $result['is_mobile_legal'] && $result['is_email_legal']);
 
         return $result['is_successful'];
+    }
+
+    /**
+     * Verify if the mobile is legal.
+     * @param  String  $mobile - the mobile to verify
+     * @return true if the mobile is legal
+     */
+    private function is_mobile_legal($mobile)
+    {
+        return preg_match('/^[1-9][0-9]{10}$/', $mobile);
+    }
+
+    /**
+     * Verify if the email is legal.
+     * @param  String  $email - the email address to verify
+     * @return true if the email address is legal
+     */
+    private function is_email_legal($email)
+    {
+        return preg_match('/^[A-Z0-9._%-]{4,18}@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email);
     }
 
     /**
@@ -393,7 +421,7 @@ class Lib_accounts {
 
         $result['is_successful'] = $this->verify_passwords($old_password, $new_password, $confirm_password, $result);
         if ( $result['is_successful'] ) {
-            $result['is_old_password_correct']  = ( strlen($old_password) >= 6 && strlen($old_password) <= 16 );
+            $result['is_old_password_correct']  = $this->is_password_legal($old_password);
             $result['is_old_password_correct'] &= $this->__CI->Users_model->change_password($username, $old_password, $new_password);          
         }
 
@@ -414,7 +442,7 @@ class Lib_accounts {
         $result['is_old_password_empty']        = empty($old_password);
         $result['is_new_password_empty']        = empty($new_password);
         $result['is_password_again_empty']      = empty($confirm_password);
-        $result['is_new_password_length_legal'] = ( strlen($new_password) >= 6 && strlen($new_password) <= 16 );
+        $result['is_new_password_length_legal'] = $this->is_password_legal($confirm_password);
         $result['is_password_again_matched']    = ( $new_password == $confirm_password );
         $result['is_successful'] = !( $result['is_old_password_empty'] || $result['is_new_password_empty'] ||
                                       $result['is_password_again_empty'] || !$result['is_new_password_length_legal'] ||
@@ -424,11 +452,138 @@ class Lib_accounts {
     }
 
     /**
-     * Delete user's account.
+     * Verify if the password is legal.
+     * @param  String $password - the password to verify
+     * @return true if the password is legal
+     */
+    private function is_password_legal($password)
+    {
+        return (strlen($password) >= 6 && strlen($password) <= 16);
+    }
+
+    /**
+     * Handle edting user's profile requests.
+     * IMPORTANT: This function can only be used by administrator.
+     * 
+     * @param  String  $student_id - the student id of the student
+     * @param  [type]  $profile    [description]
+     * @param  [type]  $result     [description]
+     * @return an array which contains the query flags
+     */
+    public function edit_user_profile($student_id, $profile, &$result)
+    {
+        $result = array(
+                'is_successful'         => false,   'is_query_successful'   => false,
+                'is_student_name_empty' => true,    'is_student_name_legal' => false,
+                'is_grade_empty'        => true,    'is_grade_legal'        => false,
+                'is_class_empty'        => true,    'is_class_legal'        => false,
+                'is_room_empty'         => true,    'is_room_legal'         => false,
+                'is_mobile_legal'       => false,   'is_email_legal'        => false,
+                'is_password_legal'     => false
+            );
+        $result['is_successful']  = $this->verify_profile_information($profile, $result);
+        if ( $result['is_successful'] ) {
+            $result['is_query_successful'] = $this->update_user_profile($student_id, $profile);
+            $result['is_successful']      &= $result['is_query_successful'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Verify if basic information is legal.
+     * IMPORTANT: This function can only be used by administrator.
+     * 
+     * @param  Array $profile - the information of a certain student
+     * @param  Array $result - an array which contains the query flags 
+     * @return an array which contains the query flags
+     */
+    private function verify_profile_information($profile, &$result)
+    {
+        $result['is_student_name_empty'] = empty($profile['student_name']);
+        $result['is_student_name_legal'] = ( strlen($profile['student_name']) <= 24 );
+        $result['is_grade_empty']        = empty($profile['grade']);
+        $result['is_grade_legal']        = preg_match('/^[0-9]{4}$/', $profile['grade']);
+        $result['is_class_empty']        = empty($profile['class']);
+        $result['is_class_legal']        = preg_match('/^[0-9]{1,2}$/', $profile['class']);
+        $result['is_room_empty']         = empty($profile['room']);
+        $result['is_room_legal']         = preg_match('/^[0-9]{1,2}#[S,N][0-9]{3}$/', $profile['room']);
+        $result['is_mobile_legal']       = (empty($profile['mobile'])   || $this->is_mobile_legal($profile['mobile']));
+        $result['is_email_legal']        = (empty($profile['email'])    || $this->is_email_legal($profile['email']));
+        $result['is_password_legal']     = (empty($profile['password']) || $this->is_password_legal($profile['password']));
+
+        $result['is_successful'] = !$result['is_student_name_empty'] && $result['is_student_name_legal'] &&
+                                   !$result['is_grade_empty']         && $result['is_grade_legal']        &&
+                                   !$result['is_class_empty']         && $result['is_class_legal']        &&
+                                   !$result['is_room_empty']          && $result['is_room_legal']         &&
+                                    $result['is_mobile_legal']        && $result['is_email_legal']        &&
+                                    $result['is_password_legal'];
+        return $result['is_successful'];
+    }
+
+    /**
+     * [update_user_profile description]
+     * @param  String $student_id - the student id of the student
+     * @param  Array  $profile - the profile information of the student
+     * @return true if the query is successful
+     */
+    private function update_user_profile($student_id, $profile)
+    {
+        $is_successful = true;
+        $basic_information = array(
+                'student_id'        =>  $student_id,
+                'student_name'      =>  $profile['student_name'],
+                'grade'             =>  $profile['grade'],
+                'class'             =>  $profile['class'],
+                'user_groups_id'    =>  $this->get_user_group_id($profile['user_group_name']),
+                'room'              =>  $profile['room'],
+                'mobile'            =>  $profile['mobile'],
+                'email'             =>  $profile['email']
+            );
+        $is_successful &= $this->__CI->Students_model->update($basic_information);
+
+        if ( !empty($profile['password']) ) {
+            $account_information = array(
+                    'username'  =>  $student_id,
+                    'password'  =>  $profile['password']
+                );
+            $is_successful &= $this->__CI->Users_model->update($account_information);
+        }
+
+        return $is_successful;
+    }
+
+    /**
+     * Get the id of a certain user group by its name.
+     * @param  String $group_name - the name of the user group
+     * @return the id of the user group
+     */
+    private function get_user_group_id($group_name)
+    {
+        $user_group = $this->__CI->User_groups_model->get_user_group_id($group_name);
+        return $user_group['group_id'];
+    }
+
+    /**
+     * Handle Deleting a user's account requests.
+     * IMPORTANT: This function can only be used by administrator.
+     * 
      * @param  String $username [description]
-     * @return [type]           [description]
+     * @return an array which contains the query flags
      */
     public function delete_account($username)
+    {
+
+    }
+
+    /**
+     * Handle deleting users' account in a certain grade.
+     * IMPORTANT: This function can only be used by administrator.
+     * 
+     * @param  String $username [description]
+     * @return an array which contains the query flags
+     */
+    public function delete_accounts($grade)
     {
 
     }

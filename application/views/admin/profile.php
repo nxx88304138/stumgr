@@ -1,7 +1,7 @@
 <h1 class="redtext">账户管理</h1>
 <div id="password-information">
 	<div id="password-information-header" class="page-header">
-		<span class="title">密码</span><span><a id="show-change-password-dialog" href="javascript:void(0)">更改密码</a></span>
+		<span class="title">密码</span><span><a id="open-change-password-dialog" href="javascript:void(0)">更改密码</a></span>
 	</div> <!-- /password-information-header -->
 	<div id="password-information-content" class="section">
 		<table class="table no-border" style="width: 84%;">
@@ -50,7 +50,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#show-change-password-dialog').click(function(){
+		$('#open-change-password-dialog').click(function(){
 			$('#password-error-message').css('display', 'none');
             $('#password-dialog').fadeIn();
 		});
