@@ -42,7 +42,8 @@ class Options_model extends CI_Model {
 	/**
 	 * Get all options in the options table.
 	 * @return an array which contains the value of the option if the 
-	 * query is successful, or return false if the query is failed
+	 *         query is successful, or return false if the query is 
+	 *         failed
 	 */
 	public function get_all_options()
 	{

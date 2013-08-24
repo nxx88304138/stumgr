@@ -568,24 +568,40 @@ class Lib_accounts {
      * Handle Deleting a user's account requests.
      * IMPORTANT: This function can only be used by administrator.
      * 
-     * @param  String $username [description]
-     * @return an array which contains the query flags
+     * @param  String $username - the username of the user
+     * @return true if the query is successful
      */
     public function delete_account($username)
     {
+        $this->__CI->load->model('Assessment_model');
 
+        $is_successful = true;
+        $is_successful &= $this->__CI->Users_model->delete($username);
+        $is_successful &= $this->__CI->Students_model->delete($username);
+        $is_successful &= $this->__CI->Assessment_model->delete($username);
+
+        // TO DO: Delete other data in other tables which haven't create yet.
+
+        return $is_successful;
     }
 
     /**
      * Handle deleting users' account in a certain grade.
      * IMPORTANT: This function can only be used by administrator.
      * 
-     * @param  String $username [description]
-     * @return an array which contains the query flags
+     * @param  String $username - the username of the user
+     * @return true if the query is successful
      */
     public function delete_accounts($grade)
     {
+        $students = $this->get_students_profile_list($grade);
+        $is_successful = true;
 
+        foreach ( $students as $student ) {
+            $is_successful &= $this->delete_account($student['student_id']);
+        }
+
+        return $is_successful;
     }
 }
 

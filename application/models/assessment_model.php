@@ -34,8 +34,11 @@ class Assessment_model extends CI_Model {
 	
 	/**
 	 * 
+	 * This function is mainly used for students to query their own scores
+	 * of peer assessment.
+	 * 
 	 * @param  int $year - the year when the peer assessment carried on
-	 * @param  String $student_id - 
+	 * @param  String $student_id - the student id of the student
 	 * @return a record if the query is successful, or return false if 
 	 *         the query is failed
 	 */

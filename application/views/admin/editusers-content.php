@@ -11,7 +11,7 @@
 		</select>
 	</span>
     <span>
-        <button class="btn btn-danger float-right" style="margin-bottom: 12px;">删除全部用户</button>
+        <button id="delete-accounts" class="btn btn-danger float-right" style="margin-bottom: 12px;">删除全部用户</button>
     </span>
 </div> <!-- /selector -->
 <div id="list">
@@ -148,7 +148,7 @@
     	</table>
   	</div>
   	<div class="modal-footer">
-  		<button id="delete-user" class="btn btn-danger float-left">删除</button>
+  		<button id="delete-account" class="btn btn-danger float-left">删除</button>
 		<button id="edit-profile" class="btn btn-primary">确认</button>
 		<button class="btn btn-cancel">取消</button>
  	</div>
@@ -278,4 +278,65 @@
         });
         set_loading_mode(false);
 	}
+</script>
+
+<!-- Delete Accounts -->
+<script type="text/javascript">
+    $('#delete-account').click(function(){
+        var student_id = $('label[name="student_id"]').text();
+        set_loading_mode(true);
+        delete_account(student_id);
+    });
+    $('#delete-accounts').click(function(){
+        var result = confirm('您确定要删除该年级所有学生的信息吗??\n该操作将无法恢复!');
+        if (result == true) {
+            var grade = $('#available-grades').val();
+            $(this).text('请稍候...');
+            $(this).prop('disabled', true);
+            $('select').prop('disabled', true);
+            delete_accounts(grade);
+        }
+    });
+</script>
+<script type="text/javascript">
+    function delete_account(student_id) {
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: "<?php echo base_url().'admin/delete_account/'; ?>" + student_id,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['is_successful'] ) {
+                    load('editusers');
+                } else {
+                    set_error_message('#page-error', false);
+                }
+            },
+            error: function() {
+                set_error_message('#page-error', false);
+            }
+        });
+        set_loading_mode(false);
+    }
+</script>
+<script type="text/javascript">
+    function delete_accounts(grade) {
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: "<?php echo base_url().'admin/delete_accounts/'; ?>" + grade,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['is_successful'] ) {
+                    location.reload();
+                } else {
+                    set_error_message('#page-error', false);
+                }
+            },
+            error: function() {
+                set_error_message('#page-error', false);
+            }
+        });
+        set_loading_mode(false);
+    }
 </script>

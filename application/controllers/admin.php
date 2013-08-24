@@ -344,23 +344,29 @@ class Admin extends CI_Controller {
     }
 
     /**
-     * [delete_user description]
-     * @param  [type] $student_id [description]
+     * Handle Deleting a user's account requests.
+     * @param  String $student_id - the student id of the student
      * @return an array which contains the query flags
      */
-    public function delete_user($student_id)
+    public function delete_account($student_id)
     {
+        $result = array( 'is_successful' => false );
+        $result['is_successful'] = $this->lib_accounts->delete_account($student_id);
 
+        echo json_encode($result);
     }
 
     /**
-     * [delete_users description]
-     * @param  [type] $grade [description]
+     * Handle deleting users' account in a certain grade.
+     * @param  int $grade - the grade of the students
      * @return an array which contains the query flags
      */
-    public function delete_users($grade)
+    public function delete_accounts($grade)
     {
+        $result = array( 'is_successful' => false );
+        $result['is_successful'] = $this->lib_accounts->delete_accounts($grade);
 
+        echo json_encode($result);
     }
 }
 
