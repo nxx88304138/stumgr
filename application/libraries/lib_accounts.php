@@ -209,7 +209,7 @@ class Lib_accounts {
      */
     public function get_students_profile_list($grade)
     {
-        $students = $this->__CI->Students_model->get_students_list_by_grade($grade);
+        $students = $this->__CI->Students_model->get_students_profile_list_by_grade($grade);
         foreach ( $students as &$student ) {
             $student['user_group'] = $this->get_user_group_details($student['user_groups_id']);
         }

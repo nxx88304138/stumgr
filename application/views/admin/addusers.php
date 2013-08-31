@@ -1,7 +1,7 @@
 <div id="add-users-header" class="page-header">
     <h1>添加用户</h1>
 </div> <!-- /add-users-header -->
-<div id="add-users-section" class="page-header">
+<div id="add-users-section" class="section">
     <div class="tabbable">
         <ul class="nav nav-tabs">
             <li id="add-a-user-nav" class="active"><a href="javascript:void(0)">添加单用户</a></li>

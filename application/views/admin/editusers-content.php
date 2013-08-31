@@ -47,13 +47,13 @@
 <script type="text/javascript">
 	function get_students_profile_list(grade) {
 		$.ajax({
-            type: 'POST',
+            type: 'GET',
             async: true,
             url: "<?php echo base_url().'admin/get_students_profile_list/'; ?>" + grade,
             dataType: 'JSON',
             success: function(result) {
+                $('#students-list tbody').empty();
                 if ( result['is_successful'] ) {
-                	$('#students-list tbody').empty();
                 	var total_students = result['students'].length;
                 	for ( var i = 0; i < total_students; ++ i ) {
                 		$('#students-list').append(
@@ -193,7 +193,7 @@
 <script type="text/javascript">
 	function get_user_profile(student_id) {
 		$.ajax({
-            type: 'POST',
+            type: 'GET',
             async: true,
             url: "<?php echo base_url().'admin/get_user_profile/'; ?>" + student_id,
             dataType: 'JSON',
@@ -315,7 +315,7 @@
 <script type="text/javascript">
     function delete_account(student_id) {
         $.ajax({
-            type: 'POST',
+            type: 'GET',
             async: true,
             url: "<?php echo base_url().'admin/delete_account/'; ?>" + student_id,
             dataType: 'JSON',
@@ -346,7 +346,7 @@
 <script type="text/javascript">
     function delete_accounts(grade) {
         $.ajax({
-            type: 'POST',
+            type: 'GET',
             async: true,
             url: "<?php echo base_url().'admin/delete_accounts/'; ?>" + grade,
             dataType: 'JSON',

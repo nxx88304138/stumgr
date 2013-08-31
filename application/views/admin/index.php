@@ -37,6 +37,7 @@
 				</div>
 				<div id="sidebar-nav-frame-routine" class="sidebar-nav">
 					<a href="javascript:void(0)"><div id="sidebar-nav-routine" class="sidebar-primary-nav">每周常规</div></a>
+					<a href="#rules"><div id="sidebar-nav-rules" class="sidebar-secondary-nav">规则设置</div></a>
 					<a href="#attendance"><div id="sidebar-nav-attendance" class="sidebar-secondary-nav">考勤情况</div></a>
 					<a href="#hygiene"><div id="sidebar-nav-hygiene" class="sidebar-secondary-nav">卫生情况</div></a>
 				</div>

@@ -302,17 +302,13 @@ td.right-border {
 }
 
 #main-content .section {
-    margin-left: 32px;
-    margin-bottom: 64px;
+    padding-right: 32px;
+    margin-bottom: 48px;
 }
 
 #main-content .dialog {
     position: fixed;
     top: 25%;
-}
-
-#main-content .dialog table td.text {
-    padding-bottom: 16px;
 }
 
 #footer {

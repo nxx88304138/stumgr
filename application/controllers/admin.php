@@ -26,6 +26,7 @@ class Admin extends CI_Controller {
         parent::__construct();
         $this->load->library('lib_accounts');
         $this->load->library('lib_evaluation');
+        $this->load->library('lib_utils');
 
         $session = $this->session->all_userdata();
         if ( !($session['is_logged_in'] && $session['is_administrator']) ) {
@@ -190,7 +191,7 @@ class Admin extends CI_Controller {
      */
     private function upload_files()
     {
-        $config['upload_path']      = './application/cache/';
+        $config['upload_path']      = './application/cache/uploads/';
         $config['allowed_types']    = 'xls|xlsx';
         $config['max_size']         = '1024';
         $this->load->library('lib_upload', $config);
@@ -240,11 +241,11 @@ class Admin extends CI_Controller {
     private function log_messages(&$error_message, &$success_message)
     {
         if ( !empty($error_message) ) {
-            $error_log_file_path = APPPATH.'cache/error.log';
+            $error_log_file_path = APPPATH.'cache/logs/error.log';
             $this->log_to_file($error_log_file_path, $error_message);
         }
         if ( !empty($success_message) ) {
-            $success_log_file_path = APPPATH.'cache/success.log';
+            $success_log_file_path = APPPATH.'cache/logs/success.log';
             $this->log_to_file($success_log_file_path, $success_message);   
         }
     }
@@ -275,7 +276,7 @@ class Admin extends CI_Controller {
 
     /**
      * Get students' profile list in a certain grade.
-     * @param  int $grade [description]
+     * @param  int $grade - the grade of the students
      * @return an array which contains students' profile list if the 
      *         query success
      */
@@ -283,7 +284,7 @@ class Admin extends CI_Controller {
     {
         $available_grades = $this->lib_accounts->get_available_grades();
         $students = array();
-        if ( $this->in_array($available_grades, 'grade', $grade) ) {
+        if ( $this->lib_utils->in_array($available_grades, 'grade', $grade) ) {
             $students = $this->lib_accounts->get_students_profile_list($grade);
         }
         $result = array(
@@ -291,23 +292,6 @@ class Admin extends CI_Controller {
                 'students'      => $students
             );
         echo json_encode($result);
-    }
-
-    /**
-     * Verify if a value exists in multidimensional array.
-     * @param  Array  $array - the array to find
-     * @param  String $key   - the key to find
-     * @param  mixed  $val   - the value to find
-     * @return true if the value exists
-     */
-    private function in_array($array, $key, $val)
-    {
-        foreach ( $array as $item ) {
-            if ( isset($item[$key]) && $item[$key] == $val ) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -367,6 +351,24 @@ class Admin extends CI_Controller {
         $result['is_successful'] = $this->lib_accounts->delete_accounts($grade);
 
         echo json_encode($result);
+    }
+
+    /**
+     * Get data for the attendance.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_attendance()
+    {
+
+    }
+
+    /**
+     * Get data for the hygiene.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_hygiene()
+    {
+
     }
 }
 

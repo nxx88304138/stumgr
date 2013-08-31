@@ -251,9 +251,9 @@
     function reset_options() {
         var result = confirm('您确定要重置所有选项吗?\n该操作将无法恢复!');
         if (result == true) {
-          $('.good').prop('checked', true);
-          $.globalMessenger().hideAll();
-          $('#main-container').scrollTop(0);
+            $('.good').prop('checked', true);
+            $.globalMessenger().hideAll();
+            $('#main-container').scrollTop(0);
       }
     }
 </script>

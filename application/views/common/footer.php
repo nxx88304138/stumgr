@@ -1,6 +1,6 @@
 <div id="footer">
 	<span id="copyright">
-	Copyright&copy; 2009-2013 <a href="http://rjxy.hfut.edu.cn" target="_blank">School of Software in HFUT</a>. All rights reserved.
+	Copyright&copy; 2009-<?php echo date('Y'); ?> <a href="http://rjxy.hfut.edu.cn" target="_blank">School of Software in HFUT</a>. All rights reserved.
 	</span> <!-- /copyright -->
 	<span id="help-and-support">
 		<ul class="inline">

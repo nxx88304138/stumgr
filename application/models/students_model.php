@@ -52,7 +52,7 @@ class Students_model extends CI_Model {
 	}
 
 	/**
-	 * Update a record from the users table.
+	 * Update a record in the students table.
 	 * @param  Array $record - an array contains some essential fields
 	 * @return true if the update query is successful
 	 */
@@ -63,7 +63,7 @@ class Students_model extends CI_Model {
 	}
 
 	/**
-	 * Delete a record from the users table.
+	 * Delete a record from the students table.
 	 * @param  String $username - the username of the user
 	 * @return true if the delete query is successful
 	 */
@@ -91,6 +91,10 @@ class Students_model extends CI_Model {
 
 	/**
 	 * Get the students list in a certain class.
+	 *
+	 * This function is mainly used in getting students list in
+	 * a certain class.
+	 * 
 	 * @param  int $grade - the grade of the students
 	 * @param  int $class - the class of the students
 	 * @return an array of students list
@@ -111,10 +115,36 @@ class Students_model extends CI_Model {
 
 	/**
 	 * Get the students list in a certain grade.
+	 *
+	 * This function is mainly used in getting students list in
+	 * a certain grade.
+	 * 
 	 * @param  int $grade - the grade of the students
 	 * @return an array of students list
 	 */
 	public function get_students_list_by_grade($grade)
+	{
+		$this->db->select('student_id, student_name');
+
+		$this->db->where('grade', $grade);
+		$query = $this->db->get($this->db->dbprefix('students'));
+		if ( $query->num_rows() > 0 ) {
+			return $query->result_array();
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Get the students list in a certain grade.
+	 *
+	 * This function is mainly used for administrators to edit the 
+	 * profile of the students in a certain grade.
+	 * 
+	 * @param  int $grade - the grade of the students
+	 * @return an array of students list
+	 */
+	public function get_students_profile_list_by_grade($grade)
 	{
 		$this->db->where('grade', $grade);
 		$query = $this->db->get($this->db->dbprefix('students'));

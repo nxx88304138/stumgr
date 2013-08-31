@@ -25,6 +25,7 @@ class Home extends CI_Controller {
     {
         parent::__construct();
         $this->load->library('lib_accounts');
+        $this->load->library('lib_routine');
         $this->load->library('lib_evaluation');
 
         $session = $this->session->all_userdata();
@@ -164,6 +165,100 @@ class Home extends CI_Controller {
         $result = $this->lib_accounts->change_password($this->profile['student_id'], $old_password,
                                                        $new_password, $confirm_password);
         echo json_encode($result);
+    }
+
+    /**
+     * Get data for the attendance.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_attendance()
+    {
+        $available_years = $this->lib_routine->get_available_years($this->profile['student_id']);
+        $extra = array(
+                'current_school_year'   => $this->lib_routine->get_current_school_year(),
+                'current_semester'      => $this->lib_routine->get_current_semester(),
+                'user_groups'           => $this->profile['user_group']['group_name']
+            );
+        $data = array( 
+                'available_years'   => $available_years,
+                'extra'             => $extra
+            );
+        return $data;
+    }
+
+    /**
+     * Handle students' getting attendance records requests.
+     * @param  int    $school_year - the year to query
+     * @param  String $time  - the value is one of ( 'a-week', 'two-weeks'
+     *         'a-month', 'all' ), stands for which record to query
+     * @param  String $range - the value is one of ( 'myself', 'all' ), 
+     *         stands for which record to query
+     * @return an array contains attendance records with query flags
+     */
+    public function get_attendance_records($year, $time, $range)
+    {
+        $student_id         = $this->profile['student_id'];
+        $attendance_records = array();
+        if ( $range == 'all' && $this->profile['user_group']['group_name'] == 'Study-Monitors' ) {
+            $attendance_records = $this->lib_routine->get_attendance_records_by_class($year, $time, 
+                                                                                      $this->profile['grade'], $this->profile['class'], 'Study');
+        } else if ( $range == 'all' && $this->profile['user_group']['group_name'] == 'Sports-Monitors' ) {
+            $attendance_records = $this->lib_routine->get_attendance_records_by_class($year, $time, 
+                                                                                      $this->profile['grade'], $this->profile['class'], 'Sports');
+        } else {
+            $attendance_records = $this->lib_routine->get_attendance_records_by_students($year, $student_id, 
+                                                                                         $this->profile['student_name'], $time);
+        }
+        $result = array(
+                'is_successful' => ($attendance_records != false),
+                'records'       => $attendance_records
+            );
+        echo json_encode($result);
+    }
+
+    /**
+     * Get extra data (students list and attendance rules) for study monitors
+     * and sports monitors.
+     * @return an array contains students list and rules list
+     */
+    public function get_extra_attendance_data_for_administration()
+    {
+        $extra = array(
+                'students'  => $this->lib_routine->get_students_list_by_class($this->profile['grade'], 
+                                                                              $this->profile['class']),
+                'rules'     => $this->lib_routine->get_rules_list($this->profile['user_group']['group_name'])
+            );
+        echo json_encode($extra);
+    }
+
+    /**
+     * Handle study monitors and sports monitors posting attendance data
+     * requests.
+     * @return an array which contains the query flags
+     */
+    public function post_attendance_record()
+    {
+        if ( $this->profile['user_group']['group_name'] != 'Study-Monitors' ||
+             $this->profile['user_group']['group_name'] != 'Sports-Monitors' ) {
+            return;
+        }
+        $attendance_record = array(
+                'student_id'    => $this->input->post('student_id'),
+                'datetime'      => $this->input->post('datetime'),
+                'situation'     => $this->input->post('situation')
+            );
+
+        $result = $this->lib_routine->post_attendance_record($attendance_record);
+        echo json_encode($result);
+    }
+
+    /**
+     * Get data for the hygiene.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_hygiene()
+    {
+
     }
 
     /**

@@ -51,7 +51,7 @@ class Users_model extends CI_Model {
 	}
 
 	/**
-	 * Update a record from the users table.
+	 * Update a record in the users table.
 	 * @param  Array $record - an array contains some essential fields
 	 * @return true if the update query is successful
 	 */
