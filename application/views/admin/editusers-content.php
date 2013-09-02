@@ -302,7 +302,7 @@
         delete_account(student_id);
     });
     $('#delete-accounts').click(function(){
-        var result = confirm('您确定要删除该年级所有学生的信息吗??\n该操作将无法恢复!');
+        var result = confirm('您确定要删除该年级所有学生的信息吗?\n该操作将无法恢复!');
         if (result == true) {
             var grade = $('#available-grades').val();
             $(this).text('请稍候...');

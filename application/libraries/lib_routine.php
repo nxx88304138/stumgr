@@ -275,6 +275,20 @@ class Lib_routine {
             );
         return $result;
     }
+
+    /**
+     * Handle administrators deleting attendance data requests.
+     * @param  String    $student_id - the student id of the student
+     * @param  TimeStamp $time - the time when the event happened
+     * @return an array which contains the query flags
+     */
+    public function delete_attendance_record($student_id, $time)
+    {
+        $result = array(
+                'is_successful'     => $this->__CI->Attendance_model->delete_record($student_id, $time)
+            );
+        return $result;
+    }
 }
 
 /* End of file lib_routine.php */

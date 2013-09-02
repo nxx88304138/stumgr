@@ -82,8 +82,9 @@
     	</table>
   	</div>
   	<div class="modal-footer">
- 	   <button id="update-record" class="btn btn-primary">确认</button>
- 	   <button class="btn btn-cancel">取消</button>
+  		<button id="delete-record" class="btn btn-danger float-left">删除</button>
+ 	 	<button id="update-record" class="btn btn-primary">确认</button>
+ 	 	<button class="btn btn-cancel">取消</button>
  	</div>
 </div> <!-- /Attendance Record Modal -->
 
@@ -255,11 +256,11 @@
 			old_time   = $('#old-datetime').text(),
 			new_time   = $('#new-datetime').val(),
 			reason     = $('select[name="reason"]').val();
-		post_attendace_record(student_id, old_time, new_time, reason);
+		edit_attendace_record(student_id, old_time, new_time, reason);
 	});
 </script>
 <script type="text/javascript">
-	function post_attendace_record(student_id, old_time, new_time, reason) {
+	function edit_attendace_record(student_id, old_time, new_time, reason) {
 		var post_data     = 'student_id=' + student_id + '&old_time=' + old_time +
 		                    '&new_time=' + new_time + '&reason=' + reason;
 		$.ajax({
@@ -274,12 +275,12 @@
                 	close_edit_attendance_record_dialog();
                 	refresh_datum_item(student_id, old_time, new_time, reason);
                 } else {
-                	$('#error-message').html('无法完成请求: 可能是该记录已经存在.')
+                	$('#error-message').html('无法完成请求: 可能是该记录已经存在.');
                 	$('#error-message').fadeIn();
                 }
             },
             error: function() {
-            	$('#error-message').html('发生未知错误.')
+            	$('#error-message').html('发生未知错误.');
             	$('#error-message').fadeIn();
             }
         });
@@ -317,5 +318,51 @@
 				return rules[i]['additional_points'];
 			}
 		}
+	}
+</script>
+<script type="text/javascript">
+	$('#delete-record').click(function(){
+		var result = confirm('您确定要删除该考勤记录吗?\n该操作将无法恢复!');
+	    if (result == true) {
+			var student_id = $('label[name="student_id"]').text(),
+				time   = $('#old-datetime').text();
+			delete_attendace_record(student_id, time);
+		}
+	});
+</script>
+<script type="text/javascript">
+	function delete_attendace_record(student_id, time) {
+		var post_data = 'student_id=' + student_id + '&time=' + time;
+		$.ajax({
+            type: 'POST',
+            async: false,
+            url: "<?php echo base_url(); ?>" + 'admin/delete_attendance_records/',
+            data: post_data,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['is_successful'] ) {
+                	$('#error-message').fadeOut();
+                	close_edit_attendance_record_dialog();
+                	delete_datum_item(student_id, time);
+                } else {
+                	$('#error-message').html('发生未知错误.');
+                	$('#error-message').fadeIn();
+                }
+            },
+            error: function() {
+            	$('#error-message').html('发生未知错误.');
+            	$('#error-message').fadeIn();
+            }
+        });
+	}
+</script>
+<script type="text/javascript">
+	function delete_datum_item(student_id, time) {
+		$('.table-datum').each(function(index) {
+            if ( $(this).children().eq(0).html() == student_id &&
+                 $(this).children().eq(2).html() == time ) {
+            	$(this).remove();
+            }
+        });
 	}
 </script>

@@ -393,12 +393,6 @@ class Admin extends CI_Controller {
 
     /**
      * Handle administrators' editing attendance records requests.
-     * @param  String    $student_id - the student id of the student
-     * @param  TimeStamp $old_time - the time when the event happened 
-     *         before editing
-     * @param  TimeStamp $new_time - the time when the event happened
-     *         after editing
-     * @param  String    $reason - the datails for attendance record
      * @return an array which contains a query flag
      */
     public function edit_attendance_records()
@@ -411,6 +405,20 @@ class Admin extends CI_Controller {
             );
         $result = array(
                 'is_successful' => $this->lib_routine->edit_attendance_record($attendance_data)
+            );
+        echo json_encode($result);
+    }
+
+    /**
+     * Handle administrators' deleting attendance records requests.
+     * @return an array which contains a query flag
+     */
+    public function delete_attendance_records()
+    {
+        $student_id = $this->input->post('student_id');
+        $time       = $this->input->post('time');
+        $result = array(
+                'is_successful' => $this->lib_routine->delete_attendance_record($student_id, $time)
             );
         echo json_encode($result);
     }

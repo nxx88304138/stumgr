@@ -130,6 +130,13 @@ class Attendance_model extends CI_Model {
         }
     }
 
+    /**
+     * Get attendance records for administrators in a certain grade.
+     * @param  [type] $school_year [description]
+     * @param  [type] $grade       [description]
+     * @param  [type] $before_time [description]
+     * @return [type]              [description]
+     */
     public function get_attendance_records_by_grade($school_year, $grade, $before_time)
     {
         $students_table         = $this->db->dbprefix('students');
@@ -146,6 +153,19 @@ class Attendance_model extends CI_Model {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Delete an attendance record from the table.
+     * @param  String    $student_id - the student id of the student
+     * @param  TimeStamp $time - the time when the event happened
+     * @return true if the query is successful
+     */
+    public function delete_record($student_id, $time)
+    {
+        $this->db->where('student_id', $student_id);
+        $this->db->where('time', $time);
+        return $this->db->delete($this->db->dbprefix('attendance')); 
     }
 }
 
