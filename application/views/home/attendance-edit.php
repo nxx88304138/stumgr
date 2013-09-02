@@ -20,16 +20,15 @@
 			<tr>
 				<td>姓名</td>
 				<td>时间</td>
-				<td>情况</td>
+				<td>原因</td>
 				<td>加减分</td>
 			</tr>
 		</thead>
 		<tbody></tbody>
 	</table>
-	<button class="btn btn-primary" onclick="javascript:post_attendance_records();">提交</button>
+	<button class="btn btn-primary" onclick="javascript:add_attendance_records();">提交</button>
 	<button class="btn" onclick="javascript:reset_form();">重置</button>
 </div>
-
 
 <!-- DateTime Packer -->
 <script type="text/javascript" src="<?php echo base_url(); ?>public/js/datetimepicker.min.js"></script>
@@ -81,7 +80,7 @@
 						'</select>' + 
 					'</td>' +
 					'<td>' +
-						'<div class="controls input-append date form_datetime" data-date-format="yyyy MM dd - hh:ii" data-link-field="datetime-' + current_id + '">' + 
+						'<div id="datetimepicker" class="controls input-append date form_datetime" data-date-format="yyyy MM dd - hh:ii" data-link-field="datetime-' + current_id + '">' + 
 							'<input size="16" type="text" value="" class="span2" readonly>' +
 							'<span class="add-on"><i class="icon-remove"></i></span>' +
 							'<span class="add-on"><i class="icon-th"></i></span>' +
@@ -89,16 +88,17 @@
 						'</div>' +
 					'</td>' +
 					'<td>' +
-						'<select id="situation-' + current_id + '" class="span2 situation">' + 
+						'<select id="reason-' + current_id + '" class="span2 reason">' + 
 						'</select>' +
 					'</td>' +
 					'<td id="additional-points-' + current_id + '" class="text-normal">0</td>' +
 				'</tr>'
 			);
 			get_students_options('students-' + current_id);
-			get_situation_options('situation-' + current_id);
+			get_reason_options('reason-' + current_id);
 		}
 		initialize_datetimepicker();
+		$('#datetimepicker').datetimepicker('setEndDate', today());
 		set_footer_position();
 	}
 </script>
@@ -116,7 +116,7 @@
 	}
 </script>
 <script type="text/javascript">
-	function get_situation_options(element) {
+	function get_reason_options(element) {
 		var total_rules = extra_data['rules'].length;
 		$('#' + element).append(new Option('', ''));
 		for ( j = 0; j < total_rules; ++ j ) {
@@ -127,6 +127,15 @@
 	}
 </script>
 <script type="text/javascript">
+	function today() {
+		var currentDate = new Date(),
+			day = currentDate.getDate(),
+			month = currentDate.getMonth() + 1,
+			year = currentDate.getFullYear();
+		return year + '-' + month + '-' + day;
+	}
+</script>
+<script type="text/javascript">
 	$(document).ready(function(){
 		var current_semester = <?php echo $extra['current_semester']; ?>;
 		$('#available-semesters').val(current_semester);
@@ -134,7 +143,7 @@
 	});
 </script>
 <script type="text/javascript">
-	$('#attendence-list').delegate('.situation', 'change', function(){
+	$('#attendence-list').delegate('.reason', 'change', function(){
 		var additional_points = get_additional_points($(this).val());
 		$(this).parent().next(':last').text(additional_points);
 	});
@@ -151,7 +160,7 @@
 	}
 </script>
 <script type="text/javascript">
-	function post_attendance_records() {
+	function add_attendance_records() {
 		var result = confirm('您确定要提交吗?\n提交后将无法修改!');
         if (result != true) {
         	return;
@@ -163,11 +172,11 @@
 		for ( i = 1; i <= total_records; ++ i ) {
 			var student_id = $('#students-' + i).val(),
 				datetime   = $('#datetime-' + i).val(),
-				situation  = $('#situation-' + i).val();
-			if ( student_id && datetime && situation ) {
-				if ( !post_attendance_record(student_id, datetime, situation) ) {
+				reason  = $('#reason-' + i).val();
+			if ( student_id && datetime && reason ) {
+				if ( !add_attendance_record(student_id, datetime, reason) ) {
 					error_message += '无法导入记录: [' + student_id + ', ' +
-									 datetime + ',' + situation + ']<br />';
+									 datetime + ',' + reason + ']<br />';
 					is_successful = false;
 				} else {
 					++ number_of_records;
@@ -188,14 +197,14 @@
 	}
 </script>
 <script type="text/javascript">
-	function post_attendance_record(student_id, datetime, situation) {
+	function add_attendance_record(student_id, datetime, reason) {
 		var post_data     = 'student_id=' + student_id + '&datetime=' + datetime +
-		                    '&situation=' + situation;
+		                    '&reason=' + reason;
 		var is_successful = false;
 		$.ajax({
             type: 'POST',
             async: false,
-            url: "<?php echo base_url(); ?>" + 'home/post_attendance_record/',
+            url: "<?php echo base_url(); ?>" + 'home/add_attendance_record/',
             data: post_data,
             dataType: 'JSON',
             success: function(result) {

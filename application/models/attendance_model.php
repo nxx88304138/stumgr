@@ -46,9 +46,9 @@ class Attendance_model extends CI_Model {
     }
 
     /**
-     * [insert description]
-     * @param  [type] $record [description]
-     * @return [type]         [description]
+     * Insert attendance records to the attendance table.
+     * @param  Array $record - an array contains attendance records
+     * @return true if the query is successful
      */
     public function insert($record)
     {
@@ -56,25 +56,33 @@ class Attendance_model extends CI_Model {
     }
 
     /**
-     * [update description]
-     * @param  [type] $record [description]
-     * @return [type]         [description]
+     * Update attendance records from the attendance table.
+     * @param  Array $record - an array contains attendance records
+     * @return true if the query is successful
      */
     public function update($record)
     {
         $this->db->where('student_id', $record['student_id']);
-        return $this->db->update($this->db->dbprefix('attendance_rules'), $record);
+        $this->db->where('time', $record['old_time']);
+
+        $attendance_record = array(
+                'student_id'    => $record['student_id'],
+                'time'          => $record['new_time'],
+                'rules_id'      => $record['rules_id']
+            );
+        return $this->db->update($this->db->dbprefix('attendance'), $attendance_record);
     }
 
     /**
-     * [delete description]
-     * @param  [type] $student_id [description]
-     * @return [type]             [description]
+     * Delete attendance records for a certain student from the attendance 
+     * table.
+     * @param  String $student_id - the student id of the student
+     * @return true if the query is successful
      */
     public function delete($student_id)
     {
         $this->db->where('student_id', $student_id);
-        return $this->db->delete($this->db->dbprefix('students')); 
+        return $this->db->delete($this->db->dbprefix('attendance')); 
     }
 
     /**
@@ -115,6 +123,24 @@ class Attendance_model extends CI_Model {
                                   ' NATURAL JOIN '.$attendance_rules_table.
                                   ' WHERE school_year = ? AND time >= ? AND grade = ? AND '.
                                   ' class = ? AND rules_group = ?', array($school_year, $before_time, $grade, $class, $type));
+        if ( $query->num_rows() > 0 ) {
+            return $query->result_array();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_attendance_records_by_grade($school_year, $grade, $before_time)
+    {
+        $students_table         = $this->db->dbprefix('students');
+        $attendance_table       = $this->db->dbprefix('attendance');
+        $attendance_rules_table = $this->db->dbprefix('attendance_rules');
+
+        $query = $this->db->query('SELECT student_id, student_name, time, description, additional_points'.
+                                  ' FROM '.$attendance_table.
+                                  ' NATURAL JOIN '.$students_table.
+                                  ' NATURAL JOIN '.$attendance_rules_table.
+                                  ' WHERE school_year = ? AND time >= ? AND grade = ?', array($school_year, $before_time, $grade));
         if ( $query->num_rows() > 0 ) {
             return $query->result_array();
         } else {

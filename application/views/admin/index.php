@@ -10,6 +10,7 @@
 	<!-- CSS -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/bootstrap-responsive.min.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/datetimepicker.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/messenger.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/messenger-theme-future.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>public/css/fineuploader.min.css">

@@ -236,19 +236,19 @@ class Home extends CI_Controller {
      * requests.
      * @return an array which contains the query flags
      */
-    public function post_attendance_record()
+    public function add_attendance_record()
     {
-        if ( $this->profile['user_group']['group_name'] != 'Study-Monitors' ||
+        if ( $this->profile['user_group']['group_name'] != 'Study-Monitors' &&
              $this->profile['user_group']['group_name'] != 'Sports-Monitors' ) {
             return;
         }
         $attendance_record = array(
                 'student_id'    => $this->input->post('student_id'),
                 'datetime'      => $this->input->post('datetime'),
-                'situation'     => $this->input->post('situation')
+                'reason'        => $this->input->post('reason')
             );
 
-        $result = $this->lib_routine->post_attendance_record($attendance_record);
+        $result = $this->lib_routine->add_attendance_record($attendance_record);
         echo json_encode($result);
     }
 

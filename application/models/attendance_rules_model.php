@@ -27,7 +27,7 @@ class Attendance_rules_model extends CI_Model {
      * @param  String $rules_group - the group of the rules
      * @return an array contains attendance rules
      */
-    public function select($rules_group)
+    public function select($rules_group = '')
     {
         if ( !empty($rules_group) ) {
             $this->db->where('rules_group', $rules_group);

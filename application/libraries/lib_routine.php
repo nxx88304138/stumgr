@@ -25,6 +25,11 @@ class Lib_routine {
 
     /**
      * Get available years to select from existing data.
+     * 
+     * The function is mainly used for students to query their attendance
+     * records from the database. So the available years should not earlier
+     * than when they attend university.
+     * 
      * @return an array contains all available years
      */
     public function get_available_years($student_id)
@@ -43,8 +48,27 @@ class Lib_routine {
                 ++ $start_index;
             }
         }
+        return array_slice($available_years, $start_index);
+    }
 
-        return array_reverse(array_slice($available_years, $start_index));
+    /**
+     * Get available years to select from existing data.
+     *
+     * The function is mainly used for administrators to get all available
+     * years in the database.
+     * 
+     * @return an array contains all available years
+     */
+    public function get_all_available_years()
+    {
+        $available_years = $this->__CI->Attendance_model->get_available_years();
+        $current_size        = count($available_years);
+        $current_school_year = $this->get_current_school_year();
+
+        if ( !$this->__CI->lib_utils->in_array($available_years, 'school_year', $current_school_year) ) {
+            $available_years[$current_size]['school_year'] = $current_school_year;
+        }
+        return $available_years;
     }
 
     /**
@@ -53,7 +77,8 @@ class Lib_routine {
      */
     public function get_available_grades()
     {
-        return $this->__CI->Students_model->get_available_grades();
+        $available_grades = $this->__CI->Students_model->get_available_grades();
+        return array_reverse($available_grades);
     }
 
     /**
@@ -88,7 +113,7 @@ class Lib_routine {
 
     /**
      * Handle students' getting attendance records requests.
-     * @param  int    $year - the year to query
+     * @param  int    $school_year - the school year to query
      * @param  String $student_id - the student id of the student
      * @param  String $student_name - the student name of the student
      * @param  String $time - the value is one of ( 'a-week', 'two-weeks'
@@ -107,19 +132,34 @@ class Lib_routine {
     /**
      * Get attendance records for study monitors and sports monitors in a 
      * certain class.
-     * @param  int    $year - the year to query
-     * @param  String $time  - the value is one of ( 'a-week', 'two-weeks'
+     * @param  int    $school_year - the school year to query
+     * @param  String $time - the value is one of ( 'a-week', 'two-weeks'
      *         'a-month', 'all' ), stands for which record to query
-     * @param  String $grade - the grade of the student
-     * @param  String $class - the class of the student
+     * @param  int    $grade - the grade of the students
+     * @param  int    $class - the class of the students
      * @param  String $type - the type of the attendance records to query
-     * @return an array contains attendance records with query flags
+     * @return an array contains attendance records
      */
-    public function get_attendance_records_by_class($year, $time, $grade, $class, $type)
+    public function get_attendance_records_by_class($school_year, $time, $grade, $class, $type)
     {
         $before_time = $this->get_before_time($time);
-        return $this->__CI->Attendance_model->get_attendance_records_by_class($year, $before_time, 
+        return $this->__CI->Attendance_model->get_attendance_records_by_class($school_year, $before_time, 
                                                                               $grade, $class, $type);
+    }
+
+    /**
+     * Get attendance records for administrators monitors in a certain grade.
+     * @param  int    $school_year - the school year to query
+     * @param  int    $grade - the grade of the students
+     * @param  String $time - the value is one of ( 'a-week', 'two-weeks'
+     *         'a-month', 'all' ), stands for which record to query
+     * @return an array contains attendance records
+     */
+    public function get_attendance_records_by_grade($year, $grade, $time)
+    {
+        $before_time = $this->get_before_time($time);
+        $attendance_records = $this->__CI->Attendance_model->get_attendance_records_by_grade($year, $grade, $before_time);
+        return $attendance_records;
     }
 
     /**
@@ -188,7 +228,8 @@ class Lib_routine {
             case 'Sports-Monitors':
                 $rules_list = $this->__CI->Attendance_rules_model->select('Sports');
                 break;
-            case 'Administrator':
+            case 'Administrators':
+                $rules_list = $this->__CI->Attendance_rules_model->select();
                 break;
             default:
                 break;
@@ -202,17 +243,35 @@ class Lib_routine {
      * requests.
      * @return an array which contains the query flags
      */
-    public function post_attendance_record($attendance_data)
+    public function add_attendance_record($attendance_data)
     {
         $attendance_record = array(
                 'school_year'       => $this->get_current_school_year(),
                 'semester'          => $this->get_current_semester(),
                 'student_id'        => $attendance_data['student_id'],
                 'time'              => date('Y-m-d H:i', strtotime($attendance_data['datetime'])),
-                'rules_id'          => $this->__CI->Attendance_rules_model->get_rules_id($attendance_data['situation'])
+                'rules_id'          => $this->__CI->Attendance_rules_model->get_rules_id($attendance_data['reason'])
             );
         $result = array(
                 'is_successful'     => $this->__CI->Attendance_model->insert($attendance_record)
+            );
+        return $result;
+    }
+
+    /**
+     * Handle administrators editing attendance data requests.
+     * @return an array which contains the query flags
+     */
+    public function edit_attendance_record($attendance_data)
+    {
+        $attendance_record = array(
+                'student_id'        => $attendance_data['student_id'],
+                'old_time'          => date('Y-m-d H:i', strtotime($attendance_data['old_time'])),
+                'new_time'          => date('Y-m-d H:i', strtotime($attendance_data['new_time'])),
+                'rules_id'          => $this->__CI->Attendance_rules_model->get_rules_id($attendance_data['reason'])
+            );
+        $result = array(
+                'is_successful'     => $this->__CI->Attendance_model->update($attendance_record)
             );
         return $result;
     }

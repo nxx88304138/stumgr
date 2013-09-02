@@ -25,6 +25,7 @@ class Admin extends CI_Controller {
     {
         parent::__construct();
         $this->load->library('lib_accounts');
+        $this->load->library('lib_routine');
         $this->load->library('lib_evaluation');
         $this->load->library('lib_utils');
 
@@ -359,7 +360,59 @@ class Admin extends CI_Controller {
      */
     public function get_data_for_attendance()
     {
+        $extra = array(
+                'current_school_year'   => $this->lib_routine->get_current_school_year(),
+                'current_semester'      => $this->lib_routine->get_current_semester(),
+            );
+        $data = array( 
+                'available_years'   => $this->lib_routine->get_all_available_years(),
+                'available_grades'  => $this->lib_routine->get_available_grades(),
+                'rules'             => $this->lib_routine->get_rules_list('Administrators'),
+                'extra'             => $extra
+            );
+        return $data;
+    }
 
+    /**
+     * Handle administrators' getting attendance records requests.
+     * @param  int    $school_year - the year to query
+     * @param  int    $grade - the grade of the students
+     * @param  String $time  - the value is one of ( 'a-week', 'two-weeks'
+     *         'a-month', 'all' ), stands for which record to query
+     * @return an array contains attendance records with query flags
+     */
+    public function get_attendance_records($school_year, $grade, $time)
+    {
+        $attendance_records = $this->lib_routine->get_attendance_records_by_grade($school_year, $grade, $time);
+        $result = array(
+                'is_successful' => ($attendance_records != false),
+                'records'       => $attendance_records
+            );
+        echo json_encode($result);
+    }
+
+    /**
+     * Handle administrators' editing attendance records requests.
+     * @param  String    $student_id - the student id of the student
+     * @param  TimeStamp $old_time - the time when the event happened 
+     *         before editing
+     * @param  TimeStamp $new_time - the time when the event happened
+     *         after editing
+     * @param  String    $reason - the datails for attendance record
+     * @return an array which contains a query flag
+     */
+    public function edit_attendance_records()
+    {
+        $attendance_data = array(
+                'student_id'    => $this->input->post('student_id'),
+                'old_time'      => $this->input->post('old_time'),
+                'new_time'      => $this->input->post('new_time'),
+                'reason'        => $this->input->post('reason')
+            );
+        $result = array(
+                'is_successful' => $this->lib_routine->edit_attendance_record($attendance_data)
+            );
+        echo json_encode($result);
     }
 
     /**

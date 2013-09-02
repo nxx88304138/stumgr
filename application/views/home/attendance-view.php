@@ -29,7 +29,7 @@
 				<td>学号</td>
 				<td>姓名</td>
 				<td>时间</td>
-				<td>情况</td>
+				<td>原因</td>
 				<td>加减分</td>
 			</tr>
 		</thead>
