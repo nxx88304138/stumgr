@@ -73,7 +73,7 @@
 					<select name="reason" class="span2 reason">
 						<?php
 							foreach ( $rules as $rule ) {
-								echo '<option value="'.$rule['rules_name'].'">'.$rule['description'].'</option>';
+								echo '<option value="'.$rule['rule_name'].'">'.$rule['description'].'</option>';
 							}
 						?>
 					</select>
@@ -299,22 +299,22 @@
 	}
 </script>
 <script type="text/javascript">
-	function get_rules_description(rules_name) {
+	function get_rules_description(rule_name) {
 		var rules  = <?php echo json_encode($rules); ?>;
 		var length = rules.length;
 		for ( i = 0; i < length; ++ i ) {
-			if ( rules[i]['rules_name'] == rules_name ) {
+			if ( rules[i]['rule_name'] == rule_name ) {
 				return rules[i]['description'];
 			}
 		}
 	}
 </script>
 <script type="text/javascript">
-	function get_rules_additional_points(rules_name) {
+	function get_rules_additional_points(rule_name) {
 		var rules = <?php echo json_encode($rules); ?>;
 		var length = rules.length;
 		for ( i = 0; i < length; ++ i ) {
-			if ( rules[i]['rules_name'] == rules_name ) {
+			if ( rules[i]['rule_name'] == rule_name ) {
 				return rules[i]['additional_points'];
 			}
 		}

@@ -4,11 +4,11 @@
  * The model is for the stumgr_attendance table in the database.
  *
  * The structure of stumgr_attendance:
- *     year             -- INT(4)       -- NOT NULL
+ *     school_year      -- INT(4)       -- NOT NULL
  *     semester         -- INT(2)       -- NOT NULL
  *     student_id       -- VARCHAR(10)  -- NOT NULL --  [PRIMARY]
  *     time             -- TIMESTAMP    -- NOT NULL --  [PRIMARY]
- *     rules_id         -- INT(2)
+ *     rule_id          -- INT(2)       -- NOT NULL
  *
  * @author  Xie Haozhe <zjhzxhz@gmail.com>
  */
@@ -20,6 +20,63 @@ class Attendance_model extends CI_Model {
     {
         parent::__construct(); 
         $this->load->database();
+    }
+
+    /**
+     * Insert attendance records to the attendance table.
+     * @param  Array $record - an array contains attendance records
+     * @return true if the query is successful
+     */
+    public function insert($record)
+    {
+        return $this->db->insert($this->db->dbprefix('attendance'), $record);
+    }
+
+    /**
+     * Update attendance records from the attendance table.
+     * @param  Array $record - an array contains attendance records
+     * @return true if the query is successful
+     */
+    public function update($record)
+    {
+        $this->db->where('student_id', $record['student_id']);
+        $this->db->where('time', $record['old_time']);
+
+        $attendance_record = array(
+                'student_id'    => $record['student_id'],
+                'time'          => $record['new_time'],
+                'rule_id'       => $record['rule_id']
+            );
+        return $this->db->update($this->db->dbprefix('attendance'), $attendance_record);
+    }
+
+    /**
+     * Delete attendance records for a certain student from the attendance 
+     * table.
+     * @param  String $student_id - the student id of the student
+     * @return true if the query is successful
+     */
+    public function delete($student_id)
+    {
+        $this->db->where('student_id', $student_id);
+        return $this->db->delete($this->db->dbprefix('attendance')); 
+    }
+
+    /**
+     * Get available years to select from existing data.
+     * @return an array contains all available years
+     */
+    public function get_available_years()
+    {
+        $this->db->distinct();
+        $this->db->select('school_year');
+        $this->db->order_by('school_year', 'asc');
+        $query = $this->db->get($this->db->dbprefix('attendance'));
+        if ( $query->num_rows() > 0 ) {
+            return $query->result_array();
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -46,68 +103,12 @@ class Attendance_model extends CI_Model {
     }
 
     /**
-     * Insert attendance records to the attendance table.
-     * @param  Array $record - an array contains attendance records
-     * @return true if the query is successful
-     */
-    public function insert($record)
-    {
-        return $this->db->insert($this->db->dbprefix('attendance'), $record);
-    }
-
-    /**
-     * Update attendance records from the attendance table.
-     * @param  Array $record - an array contains attendance records
-     * @return true if the query is successful
-     */
-    public function update($record)
-    {
-        $this->db->where('student_id', $record['student_id']);
-        $this->db->where('time', $record['old_time']);
-
-        $attendance_record = array(
-                'student_id'    => $record['student_id'],
-                'time'          => $record['new_time'],
-                'rules_id'      => $record['rules_id']
-            );
-        return $this->db->update($this->db->dbprefix('attendance'), $attendance_record);
-    }
-
-    /**
-     * Delete attendance records for a certain student from the attendance 
-     * table.
-     * @param  String $student_id - the student id of the student
-     * @return true if the query is successful
-     */
-    public function delete($student_id)
-    {
-        $this->db->where('student_id', $student_id);
-        return $this->db->delete($this->db->dbprefix('attendance')); 
-    }
-
-    /**
-     * Get available years to select from existing data.
-     * @return an array contains all available years
-     */
-    public function get_available_years()
-    {
-        $this->db->distinct();
-        $this->db->select('school_year');
-        $query = $this->db->get($this->db->dbprefix('attendance'));
-        if ( $query->num_rows() > 0 ) {
-            return $query->result_array();
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Get attendance records for study monitors and sports monitors in a 
      * certain class.
      * @param  int    $school_year - the school year to query
      * @param  String $before_time - the start time to query
-     * @param  String $grade - the grade of the student
-     * @param  String $class - the class of the student
+     * @param  String $grade - the grade of the students
+     * @param  String $class - the class of the students
      * @param  String $type - the type of the attendance records to query
      * @return an array contains attendance records with query flags
      */
@@ -122,7 +123,7 @@ class Attendance_model extends CI_Model {
                                   ' NATURAL JOIN '.$students_table.
                                   ' NATURAL JOIN '.$attendance_rules_table.
                                   ' WHERE school_year = ? AND time >= ? AND grade = ? AND '.
-                                  ' class = ? AND rules_group = ?', array($school_year, $before_time, $grade, $class, $type));
+                                  ' class = ? AND rule_group = ?', array($school_year, $before_time, $grade, $class, $type));
         if ( $query->num_rows() > 0 ) {
             return $query->result_array();
         } else {
@@ -132,10 +133,10 @@ class Attendance_model extends CI_Model {
 
     /**
      * Get attendance records for administrators in a certain grade.
-     * @param  [type] $school_year [description]
-     * @param  [type] $grade       [description]
-     * @param  [type] $before_time [description]
-     * @return [type]              [description]
+     * @param  int    $school_year - the school year to query
+     * @param  String $grade - the grade of the students
+     * @param  String $before_time - the start time to query
+     * @return an array contains attendance records with query flags
      */
     public function get_attendance_records_by_grade($school_year, $grade, $before_time)
     {

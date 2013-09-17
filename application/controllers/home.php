@@ -173,7 +173,7 @@ class Home extends CI_Controller {
      */
     public function get_data_for_attendance()
     {
-        $available_years = $this->lib_routine->get_available_years($this->profile['student_id']);
+        $available_years = $this->lib_routine->get_available_years_for_attendance($this->profile['student_id']);
         $extra = array(
                 'current_school_year'   => $this->lib_routine->get_current_school_year(),
                 'current_semester'      => $this->lib_routine->get_current_semester(),
@@ -258,6 +258,57 @@ class Home extends CI_Controller {
      */
     public function get_data_for_hygiene()
     {
+        $available_years = $this->lib_routine->get_available_years_for_hygiene($this->profile['student_id']);
+        $extra = array(
+                'current_school_year'   => $this->lib_routine->get_current_school_year(),
+                'current_semester'      => $this->lib_routine->get_current_semester(),
+                'user_groups'           => $this->profile['user_group']['group_name']
+            );
+        $data = array( 
+                'available_years'   => $available_years,
+                'extra'             => $extra
+            );
+        return $data;
+    }
+
+    public function get_hygiene_records($year, $semester)
+    {
+        $student_id         = $this->profile['student_id'];
+        $hygiene_records    = array();
+
+        $hygiene_records    = $this->lib_routine->get_hygiene_records_by_students($year, $semester, $student_id);
+
+        $result = array(
+                'is_successful' => ($hygiene_records != false),
+                'records'       => $hygiene_records
+            );
+        echo json_encode($result);
+    }
+
+    public function get_extra_hygiene_data_for_administration()
+    {
+        $extra = array(
+                'rooms'     => $this->lib_routine->get_rooms_list($this->profile['grade']),
+                'weeks'     => $this->lib_routine->get_available_weeks($this->profile['grade'])
+            );
+        echo json_encode($extra);
+    }
+
+    /**
+     * Get data for the transcripts.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_transcripts()
+    {
+        
+    }
+
+    /**
+     * Get data for the gpa.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_gpa()
+    {
 
     }
 
@@ -322,6 +373,24 @@ class Home extends CI_Controller {
         }
 
         echo json_encode($result);
+    }
+
+    /**
+     * Get data for the rewards.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_rewards()
+    {
+
+    }
+
+    /**
+     * Get data for the result.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_result()
+    {
+
     }
 }
 

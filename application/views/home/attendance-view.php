@@ -38,6 +38,7 @@
 	</table>
 </div>
 <div id="page-error" class="alert alert-error hide"><strong>温馨提示: </strong>未找到可用数据.</div>
+
 <script type="text/javascript">
 	$('#available-years').change(function(){
 		var selected_year = $(this).val(),

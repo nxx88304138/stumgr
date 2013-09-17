@@ -12,8 +12,8 @@
 		<option value="2">第二/三学期</option>
 	</select>
 	<button class="btn btn-info float-right" style="margin-bottom: 12px;" onclick="javascript:add_new_table_datum();">添加记录</button>
-</div>
-<div id="post-result" class="alert hide"></div>
+</div> <!-- /selector -->
+<div id="post-result" class="alert hide"></div> <!-- /post-result -->
 <div id="list">
 	<table id="attendence-list" class="table">
 		<thead>
@@ -28,7 +28,7 @@
 	</table>
 	<button class="btn btn-primary" onclick="javascript:add_attendance_records();">提交</button>
 	<button class="btn" onclick="javascript:reset_form();">重置</button>
-</div>
+</div> <!-- /list -->
 
 <!-- DateTime Packer -->
 <script type="text/javascript" src="<?php echo base_url(); ?>public/js/datetimepicker.min.js"></script>
@@ -120,7 +120,7 @@
 		var total_rules = extra_data['rules'].length;
 		$('#' + element).append(new Option('', ''));
 		for ( j = 0; j < total_rules; ++ j ) {
-			var option_value = extra_data['rules'][j]['rules_name'],
+			var option_value = extra_data['rules'][j]['rule_name'],
 				option_text  = extra_data['rules'][j]['description'];
 			$('#' + element).append(new Option(option_text, option_value));
 		}
@@ -149,10 +149,10 @@
 	});
 </script>
 <script type="text/javascript">
-	function get_additional_points(rules_name) {
+	function get_additional_points(rule_name) {
 		var total_rules = extra_data['rules'].length;
 		for ( i = 0; i < total_rules; ++ i ) {
-			if ( extra_data['rules'][i]['rules_name'] == rules_name ) {
+			if ( extra_data['rules'][i]['rule_name'] == rule_name ) {
 				return extra_data['rules'][i]['additional_points'];
 			}
 		}

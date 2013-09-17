@@ -4,9 +4,9 @@
  * The model is for the stumgr_attendance_rules table in the database.
  *
  * The structure of stumgr_attendance_rules:
- *     rules_id             -- INT(4)       -- NOT NULL --  [PRIMARY][AUTO_INCREMENT]
- *     rules_group          -- VARCHAR(16)  -- NOT NULL
- *     rules_name           -- VARCHAR(32)  -- NOT NULL --  [UNIQUE]
+ *     rule_id              -- INT(4)       -- NOT NULL --  [PRIMARY][AUTO_INCREMENT]
+ *     rule_group           -- VARCHAR(16)  -- NOT NULL
+ *     rule_name            -- VARCHAR(32)  -- NOT NULL --  [UNIQUE]
  *     description          -- VARCHAR(64)  -- NOT NULL
  *     additional_points    -- FLOAT        -- NOT NULL
  *
@@ -24,13 +24,13 @@ class Attendance_rules_model extends CI_Model {
 
     /**
      * Get attendance rules list for different user group.
-     * @param  String $rules_group - the group of the rules
+     * @param  String $rule_group - the group of the rules
      * @return an array contains attendance rules
      */
-    public function select($rules_group = '')
+    public function select($rule_group = '')
     {
-        if ( !empty($rules_group) ) {
-            $this->db->where('rules_group', $rules_group);
+        if ( !empty($rule_group) ) {
+            $this->db->where('rule_group', $rule_group);
         }
         $query = $this->db->get( $this->db->dbprefix('attendance_rules') );
         if ( $query->num_rows() > 0 ) {
@@ -59,33 +59,33 @@ class Attendance_rules_model extends CI_Model {
      */
     public function update($record)
     {
-        $this->db->where('rules_name', $record['rules_name']);
+        $this->db->where('rule_name', $record['rule_name']);
         return $this->db->update($this->db->dbprefix('attendance_rules'), $record);
     }
 
     /**
      * Delete a record from the attendance rules table.
-     * @param  String $rules_name - the name of the rule
+     * @param  String $rule_name - the name of the rule
      * @return true if the query is successful
      */
-    public function delete($rules_name)
+    public function delete($rule_name)
     {
-        $this->db->where('rules_name', $rules_name);
+        $this->db->where('rule_name', $rule_name);
         return $this->db->delete($this->db->dbprefix('attendance_rules')); 
     }
 
     /**
      * Get the rules id of a certain rule.
-     * @param  String $rules_name - the name of the rule
+     * @param  String $rule_name - the name of the rule
      * @return the id of the rule
      */
-    public function get_rules_id($rules_name)
+    public function get_rule_id($rule_name)
     {
-        $this->db->where('rules_name', $rules_name);
+        $this->db->where('rule_name', $rule_name);
         $query = $this->db->get( $this->db->dbprefix('attendance_rules') );
         if ( $query->num_rows() > 0 ) {
             $attendance_rule = $query->row_array();
-            return $attendance_rule['rules_id'];
+            return $attendance_rule['rule_id'];
         } else {
             return false;
         }

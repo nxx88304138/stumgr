@@ -33,6 +33,7 @@ class Students_model extends CI_Model {
 	public function select($student_id)
 	{
 		$this->db->where('student_id', $student_id);
+		
 		$query = $this->db->get($this->db->dbprefix('students'));
 		if ( $query->num_rows() > 0 ) {
 			return $query->row_array();
@@ -81,6 +82,7 @@ class Students_model extends CI_Model {
 	{
 		$this->db->distinct();
 		$this->db->select('grade');
+		
 		$query = $this->db->get($this->db->dbprefix('students'));
 		if ( $query->num_rows() > 0 ) {
 			return $query->result_array();
@@ -105,6 +107,7 @@ class Students_model extends CI_Model {
 
 		$this->db->where('grade', $grade);
 		$this->db->where('class', $class);
+		
 		$query = $this->db->get($this->db->dbprefix('students'));
 		if ( $query->num_rows() > 0 ) {
 			return $query->result_array();
@@ -127,6 +130,7 @@ class Students_model extends CI_Model {
 		$this->db->select('student_id, student_name');
 
 		$this->db->where('grade', $grade);
+		
 		$query = $this->db->get($this->db->dbprefix('students'));
 		if ( $query->num_rows() > 0 ) {
 			return $query->result_array();
@@ -147,6 +151,22 @@ class Students_model extends CI_Model {
 	public function get_students_profile_list_by_grade($grade)
 	{
 		$this->db->where('grade', $grade);
+		
+		$query = $this->db->get($this->db->dbprefix('students'));
+		if ( $query->num_rows() > 0 ) {
+			return $query->result_array();
+		} else {
+			return false;
+		}
+	}
+
+	public function get_rooms_list($grade)
+	{
+		$this->db->select('room');
+		$this->db->where('grade', $grade);
+		$this->db->distinct();
+		$this->db->order_by('room');
+		
 		$query = $this->db->get($this->db->dbprefix('students'));
 		if ( $query->num_rows() > 0 ) {
 			return $query->result_array();

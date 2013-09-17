@@ -115,7 +115,7 @@
 				type: 'GET',
 				url: "<?php echo base_url(); ?>" + 'home/load/' + page,
 				cache: false,
-				async: true,
+				async: false,
 				error: function() {
 					set_loading_block(false, true);
 				}, // End of error function of ajax form

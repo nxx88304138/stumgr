@@ -3,10 +3,8 @@
 </div> <!-- /attendance-header -->
 <div id="attendance-content" class="section">
     <?php
-        if ( $extra['user_groups'] == 'Students' ) {
-            require_once(APPPATH.'views/home/attendance-view.php');
-        } else if ( $extra['user_groups'] == 'Study-Monitors' ||
-                    $extra['user_groups'] == 'Sports-Monitors' ) {
+        if ( $extra['user_groups'] == 'Study-Monitors' ||
+             $extra['user_groups'] == 'Sports-Monitors' ) {
             echo '<div class="tabbable">';
             echo '<ul class="nav nav-tabs">';
             echo '<li id="view-attendance-nav" class="active"><a href="javascript:void(0)">查看</a></li>';
@@ -21,6 +19,8 @@
             echo '</div>';
             echo '</div>';
             echo '</div>';
+        } else {
+            require_once(APPPATH.'views/home/attendance-view.php');
         }
     ?>
 </div> <!-- /attendance-section -->

@@ -44,13 +44,13 @@
 				</div>
 				<div id="sidebar-nav-frame-scores" class="sidebar-nav">
 					<a href="javascript:void(0)"><div id="sidebar-nav-scores" class="sidebar-primary-nav">成绩分析</div></a>
-					<a href="#courses"><div id="sidebar-nav-courses" class="sidebar-secondary-nav">课程设置</div></a>
+					<a href="#scoresettings"><div id="sidebar-nav-scoresettings" class="sidebar-secondary-nav">参数设置</div></a>
 					<a href="#transcripts"><div id="sidebar-nav-transcripts" class="sidebar-secondary-nav">成绩分析</div></a>
 					<a href="#gpa"><div id="sidebar-nav-gpa" class="sidebar-secondary-nav">GPA计算</div></a>
 				</div>
 				<div id="sidebar-nav-frame-evaluation" class="sidebar-nav">
 					<a href="javascript:void(0)"><div id="sidebar-nav-evaluation" class="sidebar-primary-nav">综合测评</div></a>
-					<a href="#settings"><div id="sidebar-nav-settings" class="sidebar-secondary-nav">参数设置</div></a>
+					<a href="#evaluationsettings"><div id="sidebar-nav-evaluationsettings" class="sidebar-secondary-nav">参数设置</div></a>
 					<a href="#assessment"><div id="sidebar-nav-assessment" class="sidebar-secondary-nav">学生互评</div></a>
 					<a href="#rewards"><div id="sidebar-nav-rewards" class="sidebar-secondary-nav">奖惩情况</div></a>
 					<a href="#result"><div id="sidebar-nav-result" class="sidebar-secondary-nav">查看结果</div></a>
@@ -124,7 +124,7 @@
 				type: 'GET',
 				url: "<?php echo base_url(); ?>" + 'admin/load/' + page,
 				cache: false,
-				async: true,
+				async: false,
 				error: function() {
 					set_loading_block(false, true);
 				}, // End of error function of ajax form

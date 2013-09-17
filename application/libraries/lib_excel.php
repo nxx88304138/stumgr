@@ -59,3 +59,6 @@ class Lib_excel extends PHPExcel {
 	}
 	
 }
+
+/* End of file lib_excel.php */
+/* Location: ./application/libraries/lib_excel.php */

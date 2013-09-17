@@ -26,6 +26,7 @@ class Admin extends CI_Controller {
         parent::__construct();
         $this->load->library('lib_accounts');
         $this->load->library('lib_routine');
+        $this->load->library('lib_scores');
         $this->load->library('lib_evaluation');
         $this->load->library('lib_utils');
 
@@ -242,11 +243,11 @@ class Admin extends CI_Controller {
     private function log_messages(&$error_message, &$success_message)
     {
         if ( !empty($error_message) ) {
-            $error_log_file_path = APPPATH.'cache/logs/error.log';
+            $error_log_file_path = APPPATH.'logs/error.log';
             $this->log_to_file($error_log_file_path, $error_message);
         }
         if ( !empty($success_message) ) {
-            $success_log_file_path = APPPATH.'cache/logs/success.log';
+            $success_log_file_path = APPPATH.'logs/success.log';
             $this->log_to_file($success_log_file_path, $success_message);   
         }
     }
@@ -355,6 +356,15 @@ class Admin extends CI_Controller {
     }
 
     /**
+     * Get data for the rules.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_rules()
+    {
+
+    }
+
+    /**
      * Get data for the attendance.php page.
      * @return an array which contains data which the page needs
      */
@@ -365,7 +375,7 @@ class Admin extends CI_Controller {
                 'current_semester'      => $this->lib_routine->get_current_semester(),
             );
         $data = array( 
-                'available_years'   => $this->lib_routine->get_all_available_years(),
+                'available_years'   => $this->lib_routine->get_all_available_years_for_attendance(),
                 'available_grades'  => $this->lib_routine->get_available_grades(),
                 'rules'             => $this->lib_routine->get_rules_list('Administrators'),
                 'extra'             => $extra
@@ -430,6 +440,94 @@ class Admin extends CI_Controller {
     public function get_data_for_hygiene()
     {
 
+    }
+
+    /**
+     * Get data for the scoresettings.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_scoresettings()
+    {
+
+    }
+
+    /**
+     * Handle administrators' import scores requests.
+     * @return an array which contains the query flags
+     */
+    public function import_scores()
+    {
+        $result = array(
+                'is_successful'         => false,
+                'is_upload_successful'  => false,   'is_query_successful'   => false,
+                'success_message'       => '',      'error_message'         => ''
+            );
+
+        $upload_result = $this->upload_files();
+        $result['is_upload_successful']     = $upload_result['is_successful'];
+        if ( !$result['is_upload_successful'] ) {
+            $result['error_message']        = $upload_result['extra_message'];
+        } else {
+            $result['is_query_successful']  = $this->Lib_scores->import_scores($upload_result['extra_message'], $result);
+            $result['is_successful']        = $result['is_query_successful'];
+            $this->log_messages($result['error_message'], $result['success_message']);
+        }
+
+        echo json_encode($result);
+    }
+
+    /**
+     * Get data for the transcripts.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_transcripts()
+    {
+        
+    }
+
+    /**
+     * Get data for the gpa.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_gpa()
+    {
+        
+    }
+
+    /**
+     * Get data for the evaluationsettings.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_evaluationsettings()
+    {
+        
+    }
+
+    /**
+     * Get data for the assessment.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_assessment()
+    {
+        
+    }
+
+    /**
+     * Get data for the rewards.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_rewards()
+    {
+        
+    }
+
+    /**
+     * Get data for the result.php page.
+     * @return an array which contains data which the page needs
+     */
+    public function get_data_for_result()
+    {
+        
     }
 }
 
