@@ -193,7 +193,7 @@ class Admin extends CI_Controller {
      */
     private function upload_files()
     {
-        $config['upload_path']      = './application/cache/uploads/';
+        $config['upload_path']      = './application/uploads/';
         $config['allowed_types']    = 'xls|xlsx';
         $config['max_size']         = '1024';
         $this->load->library('lib_upload', $config);
@@ -448,7 +448,7 @@ class Admin extends CI_Controller {
      */
     public function get_data_for_scoresettings()
     {
-
+        
     }
 
     /**
@@ -468,7 +468,7 @@ class Admin extends CI_Controller {
         if ( !$result['is_upload_successful'] ) {
             $result['error_message']        = $upload_result['extra_message'];
         } else {
-            $result['is_query_successful']  = $this->Lib_scores->import_scores($upload_result['extra_message'], $result);
+            $result['is_query_successful']  = $this->lib_scores->import_scores($upload_result['extra_message'], $result);
             $result['is_successful']        = $result['is_query_successful'];
             $this->log_messages($result['error_message'], $result['success_message']);
         }

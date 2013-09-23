@@ -79,15 +79,18 @@
         $('#add-a-user-tab').removeClass('active');
         $('#add-users-nav').addClass('active');
         $('#add-users-tab').addClass('active');
+        set_footer_position();
     });
     $('#add-a-user-nav').click(function(){
         $('#add-users-nav').removeClass('active');
         $('#add-users-tab').removeClass('active');
         $('#add-a-user-nav').addClass('active');
         $('#add-a-user-tab').addClass('active');
+        set_footer_position();
     });
 </script>
 
+<!-- JavaScript for add a user tab -->
 <script type="text/javascript" src="<?php echo base_url().'public/js/placeholder.min.js'; ?>"></script>
 <script type="text/javascript">$('input, textarea').placeholder();</script>
 <script type="text/javascript">
@@ -151,6 +154,8 @@
         }
     }
 </script>
+
+<!-- JavaScript for add users tab -->
 <script type="text/javascript" src="<?php echo base_url().'public/js/fineuploader.min.js'; ?>"></script>
 <script>
     $(document).ready(function () {

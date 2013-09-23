@@ -4,7 +4,7 @@
 <div id="messages-section" class="section">
 	<div id="error-messages" class="alert alert-error">
 		<?php 
-			$error_log_file = APPPATH.'cache/logs/error.log';
+			$error_log_file = APPPATH.'logs/error.log';
 			if ( file_exists($error_log_file) ) {
 				require_once ($error_log_file);
 				unlink($error_log_file);
@@ -14,7 +14,7 @@
 
 	<div id="success-messages" class="alert alert-success">
 		<?php 
-			$success_log_file = APPPATH.'cache/logs/success.log';
+			$success_log_file = APPPATH.'logs/success.log';
 			if ( file_exists($success_log_file) ) {
 				require_once ($success_log_file);
 				unlink($success_log_file);
