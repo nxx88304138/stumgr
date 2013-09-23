@@ -3,3 +3,4 @@ vendor/*
 */logs/!index.html
 */cache/*
 */cache/!index.html
+*/uploads/*
